@@ -5,7 +5,11 @@
   CookTWGame PaperDialog 動畫),GO 才前往。視覺:暗底 #0c0c0e + 金 #e8b463。
 - 已完成:hero(酷可 cook + 頭像)、10 個遊戲作品上板(8 個有 CG 封面)、
   紙張介紹視窗、29 張 pixiv 畫作瀑布流畫廊(點回 pixiv 原頁)。
-- 已上線:https://personal-site-50c.pages.dev(Cloudflare Pages,直傳模式:
-  npm run build 後 npx wrangler pages deploy dist --project-name personal-site --branch master)。
+- 正式網域 cook1470.com(2026-08-11 購於 Cloudflare Registrar):
+  cook1470.com / www → personal-site 專案;phantasia.cook1470.com → phantasia 專案(視覺小說編輯器,
+  由 phantasia-engine 的 Claude 出靜態包、經 bridge 協作部署);phantasia-demo.pages.dev 為遊戲 demo,
+  子網域提案 play.cook1470.com 待用戶點頭。DNS 為三條 proxied CNAME 指向各 pages.dev。
+- 部署:直傳模式,npm run build 後 npx wrangler pages deploy dist --project-name personal-site --branch master。
   GitHub:https://github.com/cook1470/personal-site(master)。
-- 尚未:社群連結仍是 # 佔位、Fabula 與 Phantasia 缺圖、自訂網域。
+- 首頁結構:地表像素世界(cookland 概念,酷可手繪 sprite)→ 土層帶 → 地底證物板 + 畫廊。
+- 尚未:社群連結仍是 # 佔位、Fabula 與 Phantasia 缺圖、主站 GO 尚未指向編輯器/demo(等用戶)。
