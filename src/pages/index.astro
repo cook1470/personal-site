@@ -1,17 +1,279 @@
 ---
+// 首頁 prototype:暗底細線 + 單一強調色,依 .agent/features/creator_profile.md
+const works = [
+  { name: 'Phantasia Engine', year: '2026', tag: '引擎', desc: '視覺小說引擎與編輯器。不寫程式,故事自己會走。', status: '開發中', link: '' },
+  { name: 'Fabula', year: '2026', tag: 'TRPG', desc: '多個 AI 分工的文字冒險。世界在你行動的空檔偷偷長大。', status: '', link: 'https://fabula.b43096022.workers.dev/' },
+  { name: 'PhantomLedger 幻錄', year: '2026', tag: 'TRPG × Roguelike', desc: '一本記錄你做過什麼的書。結尾唸帳,逐條清算。', status: '開發中', link: '' },
+  { name: 'CookTWGame', year: '2026', tag: '光暈同人', desc: '塔防、殭屍、RTS、劇情。九個遊戲,同一個世界。', status: '持續更新', link: '' },
+  { name: 'PixiTank', year: '2026', tag: '多人對戰', desc: '八人坦克混戰。子彈會互抵,草叢藏得住人。', status: '', link: '' },
+  { name: '小女巫・啟程', year: '2025', tag: '射擊', desc: '橫向飛行射擊。三十天,一篇一篇寫出來的遊戲。', status: '', link: '' },
+  { name: 'Dunjo', year: '2026', tag: '平台跳躍', desc: '黑白像素。關卡是玩家自己畫的。', status: '', link: '' },
+  { name: 'Ryvexia', year: '2024', tag: '音樂遊戲', desc: '四鍵下落式。譜面編輯器附上,曲庫等你投稿。', status: '', link: '' },
+  { name: '五十音 BINGO', year: '2025', tag: '小品', desc: '看片假名,點平假名。連線之前,先認得它們。', status: '', link: '' },
+  { name: 'CK_TWEventsGame', year: '2021–2024', tag: '光暈同人', desc: '三年,一百二十個版本。什麼類型都試過一遍的地方。', status: '', link: '' },
+];
 
+const links = [
+  { name: 'YouTube', url: '#' },
+  { name: 'X', url: '#' },
+  { name: 'Discord', url: '#' },
+  { name: 'GitHub', url: '#' },
+];
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>酷可 cook — 遊戲開發與繪畫</title>
+    <meta name="description" content="酷可(cook)的作品檔案庫:遊戲、引擎、工具與畫。" />
+  </head>
+  <body>
+    <canvas id="bg"></canvas>
+
+    <main>
+      <header class="hero">
+        <p class="hero-kicker">GAME DEV / ILLUSTRATION</p>
+        <h1>酷可 <span class="latin">cook</span></h1>
+        <p class="hero-line">做遊戲,也做讓別人能做遊戲的東西。</p>
+        <nav class="links">
+          {links.map((l) => <a href={l.url}>{l.name}</a>)}
+        </nav>
+      </header>
+
+      <section class="works">
+        <h2><span class="mark">錄</span>作品</h2>
+        <ol>
+          {works.map((w) => (
+            <li class="entry">
+              <a class="entry-inner" href={w.link || undefined}>
+                <span class="entry-year">{w.year}</span>
+                <span class="entry-body">
+                  <span class="entry-title">
+                    {w.name}
+                    {w.status && <em class="entry-status">{w.status}</em>}
+                  </span>
+                  <span class="entry-desc">{w.desc}</span>
+                </span>
+                <span class="entry-tag">{w.tag}</span>
+              </a>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <footer>
+        <p>© 2026 酷可 cook</p>
+      </footer>
+    </main>
+  </body>
 </html>
+
+<style>
+  :global(html) {
+    background: #0c0c0e;
+  }
+  :global(body) {
+    margin: 0;
+    color: #d6d3cd;
+    font-family: 'Noto Sans TC', 'Microsoft JhengHei', system-ui, sans-serif;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  #bg {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+  main {
+    position: relative;
+    z-index: 1;
+    max-width: 46rem;
+    margin: 0 auto;
+    padding: 0 1.25rem;
+  }
+
+  .hero {
+    padding: 22vh 0 14vh;
+  }
+  .hero-kicker {
+    margin: 0 0 0.5rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.25em;
+    color: #6f6a61;
+  }
+  h1 {
+    margin: 0;
+    font-size: clamp(2.4rem, 7vw, 3.6rem);
+    font-weight: 600;
+    color: #f0ede6;
+  }
+  h1 .latin {
+    color: #e8b463;
+    font-weight: 400;
+  }
+  .hero-line {
+    margin: 0.75rem 0 1.75rem;
+    color: #a29d93;
+  }
+  .links {
+    display: flex;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+  }
+  .links a {
+    color: #a29d93;
+    text-decoration: none;
+    font-size: 0.85rem;
+    border-bottom: 1px solid #2c2c30;
+    padding-bottom: 2px;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .links a:hover {
+    color: #e8b463;
+    border-color: #e8b463;
+  }
+
+  .works h2 {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #a29d93;
+    margin: 0 0 1.5rem;
+  }
+  .works h2 .mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.7rem;
+    height: 1.7rem;
+    border: 1px solid #e8b463;
+    color: #e8b463;
+    font-size: 0.9rem;
+    clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px));
+  }
+  .works ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid #232327;
+  }
+  .entry {
+    border-bottom: 1px solid #232327;
+  }
+  .entry-inner {
+    display: grid;
+    grid-template-columns: 6.5rem 1fr auto;
+    gap: 1rem;
+    align-items: baseline;
+    padding: 1.1rem 0.5rem;
+    color: inherit;
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+  .entry-inner:hover {
+    background: #131316;
+  }
+  .entry-inner:hover .entry-title {
+    color: #e8b463;
+  }
+  .entry-year {
+    color: #6f6a61;
+    font-size: 0.8rem;
+    font-variant-numeric: tabular-nums;
+  }
+  .entry-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+  .entry-title {
+    color: #f0ede6;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+  .entry-status {
+    font-style: normal;
+    font-size: 0.7rem;
+    color: #e8b463;
+    border: 1px solid #4a3d28;
+    padding: 0.05rem 0.4rem;
+    margin-left: 0.5rem;
+    vertical-align: 1px;
+  }
+  .entry-desc {
+    color: #8b867c;
+    font-size: 0.85rem;
+  }
+  .entry-tag {
+    color: #6f6a61;
+    font-size: 0.75rem;
+    white-space: nowrap;
+  }
+
+  footer {
+    padding: 6rem 0 2.5rem;
+    color: #55524b;
+    font-size: 0.8rem;
+  }
+
+  @media (max-width: 560px) {
+    .entry-inner {
+      grid-template-columns: 1fr;
+      gap: 0.2rem;
+    }
+    .entry-tag {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  // 背景:少量緩慢漂浮的微粒,克制不搶主體
+  const canvas = document.getElementById('bg') as HTMLCanvasElement;
+  const ctx = canvas.getContext('2d')!;
+  let w = 0;
+  let h = 0;
+
+  type Mote = { x: number; y: number; r: number; vy: number; a: number };
+  let motes: Mote[] = [];
+
+  function resize() {
+    w = canvas.width = window.innerWidth * devicePixelRatio;
+    h = canvas.height = window.innerHeight * devicePixelRatio;
+    canvas.style.width = '100%';
+    canvas.style.height = '100%';
+    const count = Math.min(40, Math.floor(window.innerWidth / 30));
+    motes = Array.from({ length: count }, () => ({
+      x: Math.random() * w,
+      y: Math.random() * h,
+      r: (Math.random() * 1.2 + 0.4) * devicePixelRatio,
+      vy: (Math.random() * 0.15 + 0.05) * devicePixelRatio,
+      a: Math.random() * 0.35 + 0.1,
+    }));
+  }
+
+  function tick() {
+    ctx.clearRect(0, 0, w, h);
+    for (const m of motes) {
+      m.y -= m.vy;
+      if (m.y < -4) {
+        m.y = h + 4;
+        m.x = Math.random() * w;
+      }
+      ctx.beginPath();
+      ctx.arc(m.x, m.y, m.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(232, 180, 99, ${m.a})`;
+      ctx.fill();
+    }
+    requestAnimationFrame(tick);
+  }
+
+  resize();
+  window.addEventListener('resize', resize);
+  requestAnimationFrame(tick);
+</script>
