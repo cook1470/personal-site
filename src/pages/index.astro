@@ -38,12 +38,15 @@ const links = [
 
     <main>
       <header class="hero">
-        <p class="hero-kicker">GAME DEV / ILLUSTRATION</p>
-        <h1>酷可 <span class="latin">cook</span></h1>
-        <p class="hero-line">做遊戲,也做讓別人能做遊戲的東西。</p>
-        <nav class="links">
-          {links.map((l) => <a href={l.url}>{l.name}</a>)}
-        </nav>
+        <div class="hero-text">
+          <p class="hero-kicker">GAME DEV / ILLUSTRATION</p>
+          <h1>酷可 <span class="latin">cook</span></h1>
+          <p class="hero-line">做遊戲,也做讓別人能做遊戲的東西。</p>
+          <nav class="links">
+            {links.map((l) => <a href={l.url}>{l.name}</a>)}
+          </nav>
+        </div>
+        <img class="hero-portrait" src="/images/cook.jpg" alt="酷可" width="535" height="535" />
       </header>
 
       <section class="works">
@@ -112,7 +115,18 @@ const links = [
   }
 
   .hero {
-    padding: 26vh 0 20vh;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 3rem;
+    padding: 18vh 0 16vh;
+  }
+  .hero-portrait {
+    width: clamp(11rem, 22vw, 17rem);
+    height: auto;
+    border: 1px solid #2c2c30;
+    clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
+    transform: rotate(2deg) translateY(-1.5rem);
   }
   .hero-kicker {
     margin: 0 0 0.5rem;
@@ -204,6 +218,67 @@ const links = [
   }
   .flip .feature-visual {
     grid-column: 5 / span 8;
+  }
+
+  /* 每段各自的錯位:寬度、上下交疊方向、傾斜都不同,打破整齊 */
+  .feature:nth-of-type(1) .feature-visual {
+    grid-column: 1 / span 8;
+    transform: rotate(-0.5deg);
+  }
+  .feature:nth-of-type(1) .feature-text {
+    margin-top: 7rem;
+  }
+  .feature:nth-of-type(2) {
+    margin-left: clamp(0rem, 6vw, 6rem);
+  }
+  .feature:nth-of-type(2) .feature-visual {
+    grid-column: 6 / span 7;
+    aspect-ratio: 16 / 9;
+    transform: rotate(0.6deg);
+  }
+  .feature:nth-of-type(2) .feature-text {
+    grid-column: 2 / span 5;
+    margin-top: -6rem;
+  }
+  .feature:nth-of-type(3) {
+    margin-right: clamp(0rem, 8vw, 8rem);
+  }
+  .feature:nth-of-type(3) .feature-visual {
+    grid-column: 1 / span 7;
+    aspect-ratio: 16 / 10;
+    transform: rotate(-0.8deg);
+  }
+  .feature:nth-of-type(3) .feature-text {
+    grid-column: 7 / span 5;
+    margin-top: 2rem;
+    margin-bottom: -4rem;
+  }
+  .feature:nth-of-type(4) {
+    margin-left: clamp(0rem, 3vw, 3rem);
+  }
+  .feature:nth-of-type(4) .feature-visual {
+    grid-column: 4 / span 9;
+    transform: rotate(0.4deg);
+  }
+  .feature:nth-of-type(4) .feature-text {
+    grid-column: 1 / span 5;
+    margin-top: 8rem;
+  }
+  .feature:nth-of-type(5) .feature-visual {
+    grid-column: 2 / span 6;
+    aspect-ratio: 16 / 11;
+    transform: rotate(-0.6deg);
+  }
+  .feature:nth-of-type(5) .feature-text {
+    grid-column: 7 / span 5;
+    margin-top: -5rem;
+  }
+  .feature:nth-of-type(2) .feature-no {
+    top: auto;
+    bottom: -0.5em;
+  }
+  .feature:nth-of-type(4) .feature-no {
+    top: 50%;
   }
   .feature-status {
     position: absolute;
@@ -316,12 +391,31 @@ const links = [
   }
 
   @media (max-width: 820px) {
-    .feature {
+    .hero {
+      flex-direction: column-reverse;
+      align-items: flex-start;
+      gap: 2rem;
+      padding-top: 10vh;
+    }
+    .feature,
+    .feature:nth-of-type(2),
+    .feature:nth-of-type(3),
+    .feature:nth-of-type(4) {
       display: block;
+      margin-left: 0;
+      margin-right: 0;
       margin-bottom: 4.5rem;
     }
-    .feature-text {
+    .feature:nth-of-type(n) .feature-text {
       margin: -2rem 1rem 0;
+    }
+    .feature:nth-of-type(odd) .feature-text {
+      margin-left: 0.5rem;
+      margin-right: 1.75rem;
+    }
+    .feature:nth-of-type(even) .feature-text {
+      margin-left: 1.75rem;
+      margin-right: 0.5rem;
     }
     .others li {
       grid-template-columns: 1fr auto;
