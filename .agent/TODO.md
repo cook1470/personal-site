@@ -1,8 +1,9 @@
 # TODO
 
-- 與用戶確認 PROJECT_GOALS.md 內容
-- 填社群連結真實網址(YouTube / X / Discord / GitHub / pixiv)
-- Fabula 截圖、Phantasia Engine 畫面圖補上板子
-- 紙張視窗內文擴寫(每作品兩三句檔案風格介紹)
-- 手機版板子體驗(考慮拖曳平移方案)
-- 考慮改 git 連動自動部署(目前為 wrangler 直傳),或自訂網域
+- 與用戶確認 PROJECT_GOALS.md 內容(初版寫於作品集定位,像素世界合體後可能要再對一次)
+- Fabula 截圖補上板子(有線上版可截)
+- 紙張視窗內文擴寫(每作品兩三句檔案風格介紹,照用戶文風)
+- 手機版證物板體驗(考慮拖曳平移方案)
+- Discord 連結(等用戶開伺服器再加)
+- 考慮 git 連動自動部署(目前 wrangler 直傳)
+- 提醒用戶刪掉後台那把權限錯誤的舊 DNS token
