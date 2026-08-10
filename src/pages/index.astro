@@ -28,6 +28,39 @@ const threads = [
   ['ryvexia', 'ledger'],
 ];
 
+// 畫廊:pixiv 作品縮圖(public/images/art/<id>.jpg),點擊回 pixiv 原頁
+const art = [
+  { id: '131649751', title: '2025 UC 生日快樂!' },
+  { id: '131590974', title: '2025 zizi 生日快樂!' },
+  { id: '129824510', title: '2025 阿熊 生日快樂!' },
+  { id: '128815081', title: '2025 玖依炭 生日快樂!' },
+  { id: '128749943', title: '2025 GY 生日快樂!' },
+  { id: '128329065', title: '2025 極光 生日快樂!' },
+  { id: '127347725', title: '2025 小又 生日快樂!' },
+  { id: '126848943', title: '2025 Tong 生日快樂!' },
+  { id: '122109596', title: '哆啦A夢生誕祭 2024' },
+  { id: '122084482', title: 'のんちぃ' },
+  { id: '121900382', title: '健壯的桃野薔薇' },
+  { id: '121870206', title: '不死川実弥' },
+  { id: '121738829', title: '兔女郎晚晚' },
+  { id: '121658783', title: '喝水(動圖)' },
+  { id: '121626728', title: '9S' },
+  { id: '121513808', title: '是在Kuma' },
+  { id: '121468569', title: 'Mei' },
+  { id: '121368915', title: '靠很近的晚晚' },
+  { id: '121291048', title: '玖依炭' },
+  { id: '121204034', title: '阿熊' },
+  { id: '104897257', title: '梅可MEKO' },
+  { id: '100974666', title: 'ドラえもん誕生日' },
+  { id: '100345461', title: '夕刻ロベル' },
+  { id: '100187485', title: '柴犬抱枕' },
+  { id: '100180690', title: '奏手イヅル立ち絵' },
+  { id: '100145986', title: '僕(線稿)' },
+  { id: '100099027', title: '生氣的奏手イヅル' },
+  { id: '98708829', title: '皇家騎士' },
+  { id: '97748427', title: '天影武士' },
+];
+
 const links = [
   { name: 'YouTube', url: '#' },
   { name: 'X', url: '#' },
@@ -86,6 +119,25 @@ const BOARD_HEIGHT = 1500;
             </span>
           </a>
         ))}
+      </section>
+
+      <section class="gallery">
+        <h2>畫</h2>
+        <p class="gallery-note">點圖可到 pixiv 看原圖。</p>
+        <div class="gallery-wall">
+          {art.map((a, i) => (
+            <a
+              class="art"
+              href={`https://www.pixiv.net/artworks/${a.id}`}
+              target="_blank"
+              rel="noopener"
+              style={`--rot:${((i * 7) % 5) - 2}deg`}
+            >
+              <span class="pin pin-small"></span>
+              <img src={`/images/art/${a.id}.jpg`} alt={a.title} title={a.title} loading="lazy" />
+            </a>
+          ))}
+        </div>
       </section>
 
       <footer>
@@ -410,6 +462,53 @@ const BOARD_HEIGHT = 1500;
     color: #6f6a61;
     font-size: 0.68rem;
     margin-top: 0.15rem;
+  }
+
+  /* 畫廊:同一面板的延伸,小圖釘 + 各自微傾 */
+  .gallery {
+    margin: 2rem 0 4rem;
+  }
+  .gallery h2 {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #f0ede6;
+    margin: 0;
+  }
+  .gallery-note {
+    color: #6f6a61;
+    font-size: 0.8rem;
+    margin: 0.2rem 0 1.5rem;
+  }
+  .gallery-wall {
+    columns: 5 12rem;
+    column-gap: 1.1rem;
+  }
+  .art {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    margin: 0 0 1.1rem;
+    padding: 0.4rem;
+    background: #131316;
+    border: 1px solid #2c2c30;
+    transform: rotate(var(--rot));
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.4);
+    transition: transform 0.25s, border-color 0.25s;
+  }
+  .art:hover {
+    transform: rotate(0deg) scale(1.04);
+    border-color: #4a3d28;
+    z-index: 5;
+  }
+  .art img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .pin-small {
+    width: 10px;
+    height: 10px;
+    top: -5px;
   }
 
   footer {
