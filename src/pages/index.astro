@@ -150,6 +150,9 @@ const BOARD_HEIGHT = 1500;
       <article class="paper" id="paper">
         <p class="paper-meta"><span id="paper-year"></span> · <span id="paper-tag"></span></p>
         <h3 class="paper-title" id="paper-title"></h3>
+        <figure class="paper-photo" id="paper-photo" hidden>
+          <img id="paper-photo-img" src="" alt="" />
+        </figure>
         <p class="paper-desc" id="paper-desc"></p>
         <div class="paper-actions">
           <a class="paper-go" id="paper-go" href="#">GO</a>
@@ -205,6 +208,15 @@ const BOARD_HEIGHT = 1500;
         document.getElementById('paper-tag').textContent = w.tag;
         document.getElementById('paper-title').textContent = w.name;
         document.getElementById('paper-desc').textContent = w.desc;
+        const photo = document.getElementById('paper-photo');
+        const photoImg = document.getElementById('paper-photo-img');
+        if (w.img) {
+          photoImg.src = w.img;
+          photoImg.alt = w.name;
+          photo.hidden = false;
+        } else {
+          photo.hidden = true;
+        }
         const go = document.getElementById('paper-go');
         const sealed = document.getElementById('paper-sealed');
         if (w.link) {
@@ -572,6 +584,24 @@ const BOARD_HEIGHT = 1500;
     color: #2c2314;
     border-bottom: 1px solid rgba(90, 70, 35, 0.35);
     padding-bottom: 0.5rem;
+  }
+  .paper-photo {
+    margin: 0 0 1.2rem;
+    padding: 0.45rem;
+    background: #fdfaf2;
+    border: 1px solid rgba(90, 70, 35, 0.3);
+    box-shadow: 0 6px 14px rgba(40, 28, 10, 0.35);
+    transform: rotate(1.2deg);
+    width: fit-content;
+    max-width: 100%;
+  }
+  .paper-photo[hidden] {
+    display: none;
+  }
+  .paper-photo img {
+    display: block;
+    max-width: 100%;
+    max-height: 11rem;
   }
   .paper-desc {
     margin: 0 0 1.6rem;
