@@ -44,23 +44,23 @@ const links = [
 
       <section class="works">
         <h2><span class="mark">錄</span>作品</h2>
-        <ol>
+        <div class="grid">
           {works.map((w) => (
-            <li class="entry">
-              <a class="entry-inner" href={w.link || undefined}>
-                <span class="entry-year">{w.year}</span>
-                <span class="entry-body">
-                  <span class="entry-title">
-                    {w.name}
-                    {w.status && <em class="entry-status">{w.status}</em>}
-                  </span>
-                  <span class="entry-desc">{w.desc}</span>
-                </span>
-                <span class="entry-tag">{w.tag}</span>
-              </a>
-            </li>
+            <a class="card" href={w.link || undefined}>
+              <div class="card-visual" data-initial={w.name.slice(0, 1)}>
+                {w.status && <em class="card-status">{w.status}</em>}
+              </div>
+              <div class="card-body">
+                <div class="card-head">
+                  <span class="card-title">{w.name}</span>
+                  <span class="card-year">{w.year}</span>
+                </div>
+                <p class="card-desc">{w.desc}</p>
+                <span class="card-tag">{w.tag}</span>
+              </div>
+            </a>
           ))}
-        </ol>
+        </div>
       </section>
 
       <footer>
@@ -90,7 +90,7 @@ const links = [
   main {
     position: relative;
     z-index: 1;
-    max-width: 46rem;
+    max-width: 54rem;
     margin: 0 auto;
     padding: 0 1.25rem;
   }
@@ -156,63 +156,88 @@ const links = [
     font-size: 0.9rem;
     clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px));
   }
-  .works ol {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    border-top: 1px solid #232327;
-  }
-  .entry {
-    border-bottom: 1px solid #232327;
-  }
-  .entry-inner {
+  .grid {
     display: grid;
-    grid-template-columns: 6.5rem 1fr auto;
-    gap: 1rem;
-    align-items: baseline;
-    padding: 1.1rem 0.5rem;
-    color: inherit;
-    text-decoration: none;
-    transition: background 0.2s;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
   }
-  .entry-inner:hover {
-    background: #131316;
-  }
-  .entry-inner:hover .entry-title {
-    color: #e8b463;
-  }
-  .entry-year {
-    color: #6f6a61;
-    font-size: 0.8rem;
-    font-variant-numeric: tabular-nums;
-  }
-  .entry-body {
+  .card {
     display: flex;
     flex-direction: column;
-    gap: 0.15rem;
+    border: 1px solid #232327;
+    background: #101013;
+    color: inherit;
+    text-decoration: none;
+    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+    transition: border-color 0.2s, transform 0.2s;
   }
-  .entry-title {
-    color: #f0ede6;
-    font-weight: 500;
-    transition: color 0.2s;
+  .card:hover {
+    border-color: #4a3d28;
+    transform: translateY(-2px);
   }
-  .entry-status {
+  .card:hover .card-title {
+    color: #e8b463;
+  }
+  .card-visual {
+    position: relative;
+    aspect-ratio: 16 / 8;
+    background:
+      linear-gradient(160deg, #17171b 0%, #101013 60%, #131217 100%);
+    border-bottom: 1px solid #232327;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .card-visual::before {
+    content: attr(data-initial);
+    font-size: 3rem;
+    font-weight: 600;
+    color: #232327;
+  }
+  .card-status {
+    position: absolute;
+    top: 0.6rem;
+    right: 0.6rem;
     font-style: normal;
     font-size: 0.7rem;
     color: #e8b463;
     border: 1px solid #4a3d28;
-    padding: 0.05rem 0.4rem;
-    margin-left: 0.5rem;
-    vertical-align: 1px;
+    background: #0c0c0e;
+    padding: 0.05rem 0.45rem;
   }
-  .entry-desc {
+  .card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: 1rem 1.1rem 1.15rem;
+    flex: 1;
+  }
+  .card-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+  .card-title {
+    color: #f0ede6;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+  .card-year {
+    color: #6f6a61;
+    font-size: 0.78rem;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .card-desc {
+    margin: 0;
     color: #8b867c;
     font-size: 0.85rem;
+    flex: 1;
   }
-  .entry-tag {
+  .card-tag {
     color: #6f6a61;
-    font-size: 0.75rem;
-    white-space: nowrap;
+    font-size: 0.73rem;
   }
 
   footer {
@@ -222,12 +247,8 @@ const links = [
   }
 
   @media (max-width: 560px) {
-    .entry-inner {
+    .grid {
       grid-template-columns: 1fr;
-      gap: 0.2rem;
-    }
-    .entry-tag {
-      display: none;
     }
   }
 </style>
