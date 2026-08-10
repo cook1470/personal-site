@@ -3,7 +3,7 @@
 // 視覺規範依 .agent/features/creator_profile.md:暗底細線 + 單一金色
 // pos 為釘在板上的位置(left 為板寬百分比,top 為 px),rot 為傾斜度,w 為卡片寬 rem
 const pinned = [
-  { id: 'phantasia', name: 'Phantasia Engine', year: '2026', tag: '視覺小說引擎', desc: '不寫程式,故事自己會走。', status: '開發中', link: '', img: '', pos: { left: 4, top: 40 }, rot: -2.4, w: 21 },
+  { id: 'phantasia', name: 'Phantasia Engine', year: '2026', tag: '視覺小說引擎', desc: '在網頁上創作屬於你的視覺小說。', status: '搶先版', link: 'https://phantasia.cook1470.com', link2: 'https://play.cook1470.com', link2Label: '試玩範例', features: ['點選指令就能寫劇本,對話、選項、分支都是按鈕加出來的', '自己的圖跟音樂直接拖進瀏覽器,馬上出現在遊戲裡', '隨時按試玩,立刻從你選的那句開始跑'], img: '/images/works/phantasia.jpg', pos: { left: 4, top: 40 }, rot: -2.4, w: 21 },
   { id: 'fabula', name: 'Fabula', year: '2026', tag: 'AI TRPG', desc: '世界在你行動的空檔偷偷長大。', status: '', link: 'https://fabula.b43096022.workers.dev/', img: '', pos: { left: 56, top: 0 }, rot: 1.8, w: 21 },
   { id: 'ledger', name: 'PhantomLedger 幻錄', year: '2026', tag: 'TRPG × Roguelike', desc: '結尾唸帳,逐條清算。', status: '開發中', link: '', img: '/images/works/ledger.jpg', pos: { left: 33, top: 330 }, rot: -1.2, w: 17 },
   { id: 'cooktw', name: 'CookTWGame', year: '2026', tag: '光暈戰記同人', desc: '九個遊戲,同一個世界。', status: '持續更新', link: '', img: '/images/works/cooktw.jpg', pos: { left: 66, top: 420 }, rot: 2.6, w: 18 },
@@ -162,7 +162,9 @@ const BOARD_HEIGHT = 1500;
           <img id="paper-photo-img" src="" alt="" />
         </figure>
         <p class="paper-desc" id="paper-desc"></p>
+        <ul class="paper-features" id="paper-features" hidden></ul>
         <div class="paper-actions">
+          <a class="paper-go2" id="paper-go2" href="#" target="_blank" rel="noopener" hidden></a>
           <a class="paper-go" id="paper-go" href="#">GO</a>
           <span class="paper-sealed" id="paper-sealed" hidden>尚未公開</span>
         </div>
@@ -224,6 +226,26 @@ const BOARD_HEIGHT = 1500;
           photo.hidden = false;
         } else {
           photo.hidden = true;
+        }
+        const features = document.getElementById('paper-features');
+        if (w.features && w.features.length) {
+          features.innerHTML = '';
+          for (const f of w.features) {
+            const li = document.createElement('li');
+            li.textContent = f;
+            features.appendChild(li);
+          }
+          features.hidden = false;
+        } else {
+          features.hidden = true;
+        }
+        const go2 = document.getElementById('paper-go2');
+        if (w.link2) {
+          go2.href = w.link2;
+          go2.textContent = w.link2Label || '副連結';
+          go2.hidden = false;
+        } else {
+          go2.hidden = true;
         }
         const go = document.getElementById('paper-go');
         const sealed = document.getElementById('paper-sealed');
@@ -659,8 +681,39 @@ const BOARD_HEIGHT = 1500;
     justify-content: flex-end;
   }
   .paper-go[hidden],
-  .paper-sealed[hidden] {
+  .paper-go2[hidden],
+  .paper-sealed[hidden],
+  .paper-features[hidden] {
     display: none;
+  }
+  .paper-features {
+    margin: -0.6rem 0 1.4rem;
+    padding-left: 1.3rem;
+    font-size: 0.85rem;
+    line-height: 1.9;
+    color: #4a3c25;
+  }
+  .paper-actions {
+    gap: 1rem;
+    align-items: center;
+  }
+  .paper-go2 {
+    display: inline-block;
+    padding: 0.3rem 1rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: #59503c;
+    text-decoration: none;
+    border: 2px solid #59503c;
+    border-radius: 2px;
+    transform: rotate(2deg);
+    opacity: 0.75;
+    transition: transform 0.2s, opacity 0.2s;
+  }
+  .paper-go2:hover {
+    transform: rotate(2deg) scale(1.06);
+    opacity: 1;
   }
   .paper-go {
     display: inline-block;
