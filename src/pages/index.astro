@@ -93,7 +93,20 @@ const BOARD_HEIGHT = 1500;
       </footer>
     </main>
 
-    <script define:vars={{ threads }}>
+    <div class="paper-overlay" id="paper-overlay" hidden>
+      <article class="paper" id="paper">
+        <p class="paper-meta"><span id="paper-year"></span> · <span id="paper-tag"></span></p>
+        <h3 class="paper-title" id="paper-title"></h3>
+        <p class="paper-desc" id="paper-desc"></p>
+        <div class="paper-actions">
+          <a class="paper-go" id="paper-go" href="#">GO</a>
+          <span class="paper-sealed" id="paper-sealed" hidden>尚未公開</span>
+        </div>
+        <button class="paper-close" id="paper-close" aria-label="關閉">×</button>
+      </article>
+    </div>
+
+    <script define:vars={{ threads, pinned }}>
       // 依實際版面位置把金線畫在 SVG 層,線帶一點下垂弧度
       const board = document.getElementById('board');
       const svg = document.getElementById('threads');
@@ -128,6 +141,62 @@ const BOARD_HEIGHT = 1500;
       window.addEventListener('resize', draw);
       // 字型載入完成後位置可能微移,重畫一次
       if (document.fonts?.ready) document.fonts.ready.then(draw);
+
+      // 紙張視窗:仿 CookTWGame PaperDialog——黑幕淡入 + 內容 Back.Out 回彈,GO 才真的前往
+      const overlay = document.getElementById('paper-overlay');
+      const paper = document.getElementById('paper');
+      let animating = false;
+
+      function openPaper(w) {
+        document.getElementById('paper-year').textContent = w.year;
+        document.getElementById('paper-tag').textContent = w.tag;
+        document.getElementById('paper-title').textContent = w.name;
+        document.getElementById('paper-desc').textContent = w.desc;
+        const go = document.getElementById('paper-go');
+        const sealed = document.getElementById('paper-sealed');
+        if (w.link) {
+          go.href = w.link;
+          go.hidden = false;
+          sealed.hidden = true;
+        } else {
+          go.hidden = true;
+          sealed.hidden = false;
+        }
+        overlay.hidden = false;
+        animating = true;
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            overlay.classList.add('open');
+            setTimeout(() => (animating = false), 400);
+          });
+        });
+      }
+
+      function closePaper() {
+        if (animating) return;
+        animating = true;
+        overlay.classList.remove('open');
+        setTimeout(() => {
+          overlay.hidden = true;
+          animating = false;
+        }, 400);
+      }
+
+      for (const w of pinned) {
+        const el = document.getElementById(`pin-${w.id}`);
+        if (!el) continue;
+        el.addEventListener('click', (e) => {
+          e.preventDefault();
+          openPaper(w);
+        });
+      }
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) closePaper();
+      });
+      document.getElementById('paper-close').addEventListener('click', closePaper);
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !overlay.hidden) closePaper();
+      });
     </script>
   </body>
 </html>
@@ -347,6 +416,111 @@ const BOARD_HEIGHT = 1500;
     padding: 2rem 0 2.5rem;
     color: #55524b;
     font-size: 0.8rem;
+  }
+
+  /* 紙張視窗:仿 CookTWGame PaperDialog 的舊紙張質感 */
+  .paper-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0);
+    transition: background 0.4s ease-out;
+  }
+  .paper-overlay.open {
+    background: rgba(0, 0, 0, 0.55);
+  }
+  .paper {
+    position: relative;
+    width: min(30rem, 88vw);
+    padding: 2.5rem 2.5rem 2.25rem;
+    background:
+      radial-gradient(ellipse at 30% 20%, rgba(255, 250, 235, 0.55), transparent 60%),
+      radial-gradient(ellipse at 75% 85%, rgba(120, 90, 45, 0.18), transparent 55%),
+      linear-gradient(165deg, #e6d7b3 0%, #dcc99e 55%, #cdb789 100%);
+    color: #3a2f1e;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
+    clip-path: polygon(
+      1.2% 2.8%, 12% 0.6%, 30% 2%, 52% 0.4%, 71% 2.4%, 88% 0.8%, 98.6% 3.4%,
+      99.4% 22%, 98% 45%, 99.6% 68%, 98.2% 88%, 97% 97.6%,
+      80% 99%, 58% 97.4%, 36% 99.4%, 15% 98%, 2.4% 99%,
+      0.8% 80%, 2% 58%, 0.4% 34%, 1.6% 12%
+    );
+    transform: scale(0.8) rotate(-1deg);
+    opacity: 0;
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease-out;
+  }
+  .paper-overlay.open .paper {
+    transform: scale(1) rotate(-1deg);
+    opacity: 1;
+  }
+  .paper-meta {
+    margin: 0 0 0.3rem;
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    color: #7a6642;
+  }
+  .paper-title {
+    margin: 0 0 0.75rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #2c2314;
+    border-bottom: 1px solid rgba(90, 70, 35, 0.35);
+    padding-bottom: 0.5rem;
+  }
+  .paper-desc {
+    margin: 0 0 1.6rem;
+    font-size: 0.92rem;
+    line-height: 1.9;
+    color: #4a3c25;
+  }
+  .paper-actions {
+    display: flex;
+    justify-content: flex-end;
+  }
+  .paper-go {
+    display: inline-block;
+    padding: 0.35rem 1.6rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: #6d1f1f;
+    text-decoration: none;
+    border: 2px solid #6d1f1f;
+    border-radius: 2px;
+    transform: rotate(-4deg);
+    opacity: 0.85;
+    transition: transform 0.2s, opacity 0.2s;
+  }
+  .paper-go:hover {
+    transform: rotate(-4deg) scale(1.08);
+    opacity: 1;
+  }
+  .paper-sealed {
+    padding: 0.35rem 1.2rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: #59503c;
+    border: 2px solid #59503c;
+    border-radius: 2px;
+    transform: rotate(-4deg);
+    opacity: 0.55;
+  }
+  .paper-close {
+    position: absolute;
+    top: 0.9rem;
+    right: 1.1rem;
+    background: none;
+    border: none;
+    font-size: 1.3rem;
+    color: #7a6642;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0.2rem;
+  }
+  .paper-close:hover {
+    color: #3a2f1e;
   }
 
   /* 窄螢幕:板收起來,照片改為交錯堆疊 */
