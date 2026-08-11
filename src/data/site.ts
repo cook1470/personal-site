@@ -57,6 +57,7 @@ export interface Doc {
 export const articles: Doc[] = [
   { name: '什麼!在網頁上也可以寫遊戲?', year: '2023', tag: 'iThome 鐵人賽', desc: '30 天,帶你在瀏覽器裡做出遊戲。', link: 'https://ithelp.ithome.com.tw/users/20152368/ironman/6932' },
   { name: '用 PixiJS 寫遊戲!', year: '2025', tag: 'iThome 鐵人賽', desc: '從 Sprite 到特效,PixiJS 入門 30 講。', link: 'https://ithelp.ithome.com.tw/users/20152368/ironman/8417' },
+  { name: '嘎姆期刊第八期', year: '', tag: '受訪', desc: '第一篇是酷可的專訪。', link: 'https://haskasu.com/gamelet/gamelet_periodical_8/' },
 ];
 
 export const mcMaps: Doc[] = [
