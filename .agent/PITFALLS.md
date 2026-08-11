@@ -1,5 +1,8 @@
 # 踩坑紀錄
 
+- wrangler 未鎖版時 npx 抓最新版,4.121.0 相依的 miniflare 版本不存在導致部署失敗
+  (2026-08-12)。部署改用 `npx wrangler@4.120.0`;上游修復後可拿掉鎖版。
+
 - HTML `hidden` 屬性會被自己 CSS 的 `display: flex/inline-block` 蓋掉(UA 樣式必輸給
   作者樣式)。已踩兩次(paper-overlay 整頁不可點、paper-go 未公開仍顯示 GO)。
   規則:任何會用 `hidden` 切換的元素,設 display 時必須同時寫 `[hidden] { display: none }`。
