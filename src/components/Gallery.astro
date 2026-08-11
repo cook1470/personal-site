@@ -1,14 +1,14 @@
 ---
-// 畫廊:精選圖的橫向膠卷帶,無限循環緩慢左移,懸停暫停。完整作品導去 pixiv。
-// 無縫循環靠把整條內容畫兩份、位移 -50%,所以 track 內是兩段相同的 items。
+// 畫廊:精選圖的橫向膠卷帶。自動緩慢左移,可拖曳滑動;拖過的那下不觸發連結,原地點擊才導頁。
+// 無縫循環靠把整條內容畫兩份、位移對半長取模,所以 track 內是兩段相同的 items。
 import { art, PIXIV_HOME } from '../data/site';
 ---
 
 <section class="gallery">
   <h2>畫</h2>
-  <p class="gallery-note">點圖可到 pixiv 看原圖。</p>
-  <div class="film-strip">
-    <div class="film-track">
+  <p class="gallery-note">點圖可到 pixiv 看原圖,按住可以左右滑。</p>
+  <div class="film-strip" id="film-strip">
+    <div class="film-track" id="film-track">
       {[0, 1].map(() => (
         <>
           {art.map((a, i) => (
@@ -18,12 +18,13 @@ import { art, PIXIV_HOME } from '../data/site';
               target="_blank"
               rel="noopener"
               style={`--rot:${((i * 7) % 5) - 2}deg`}
+              draggable="false"
             >
               <span class="pin pin-small"></span>
-              <img src={`/images/art/${a.id}.jpg`} alt={a.title} title={a.title} loading="lazy" />
+              <img src={`/images/art/${a.id}.jpg`} alt={a.title} title={a.title} loading="lazy" draggable="false" />
             </a>
           ))}
-          <a class="art art-more" href={PIXIV_HOME} target="_blank" rel="noopener" style="--rot:1.5deg">
+          <a class="art art-more" href={PIXIV_HOME} target="_blank" rel="noopener" style="--rot:1.5deg" draggable="false">
             <span class="pin pin-small"></span>
             <span class="art-more-text">去 pixiv<br />看更多 →</span>
           </a>
@@ -32,6 +33,71 @@ import { art, PIXIV_HOME } from '../data/site';
     </div>
   </div>
 </section>
+
+<script>
+  const strip = document.getElementById('film-strip')!;
+  const track = document.getElementById('film-track')!;
+  const DRIFT = 25; // px/s
+  let offset = 0;
+  let half = 0;
+  let dragging = false;
+  let hovering = false;
+  let moved = false;
+  let startX = 0;
+  let startOffset = 0;
+
+  function measure() {
+    half = track.scrollWidth / 2;
+  }
+  window.addEventListener('resize', measure);
+  measure();
+
+  strip.addEventListener('mouseenter', () => (hovering = true));
+  strip.addEventListener('mouseleave', () => (hovering = false));
+
+  strip.addEventListener('pointerdown', (e) => {
+    dragging = true;
+    moved = false;
+    startX = e.clientX;
+    startOffset = offset;
+    strip.setPointerCapture(e.pointerId);
+  });
+  strip.addEventListener('pointermove', (e) => {
+    if (!dragging) return;
+    const dx = e.clientX - startX;
+    if (Math.abs(dx) > 5) moved = true;
+    offset = startOffset - dx;
+  });
+  const endDrag = () => (dragging = false);
+  strip.addEventListener('pointerup', endDrag);
+  strip.addEventListener('pointercancel', endDrag);
+
+  // 拖曳過就吞掉這次 click,免得放開時誤開連結
+  strip.addEventListener(
+    'click',
+    (e) => {
+      if (moved) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    },
+    true
+  );
+
+  let last = performance.now();
+  function tick(now: number) {
+    const dt = Math.min((now - last) / 1000, 0.05);
+    last = now;
+    if (!dragging && !hovering) offset += DRIFT * dt;
+    if (half > 0) offset = ((offset % half) + half) % half;
+    track.style.transform = `translateX(${-offset}px)`;
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+
+  // 圖片載完寬度會變,重新量
+  window.addEventListener('load', measure);
+</script>
 
 <style>
   .gallery {
@@ -51,27 +117,26 @@ import { art, PIXIV_HOME } from '../data/site';
   .film-strip {
     overflow: hidden;
     padding: 1rem 0 1.4rem;
+    cursor: grab;
+    touch-action: pan-y;
+    user-select: none;
+  }
+  .film-strip:active {
+    cursor: grabbing;
   }
   .film-track {
     display: flex;
     align-items: center;
-    gap: 1.4rem;
+    gap: 1.6rem;
     width: max-content;
-    animation: film-scroll 60s linear infinite;
-  }
-  .film-strip:hover .film-track {
-    animation-play-state: paused;
-  }
-  @keyframes film-scroll {
-    from { transform: translateX(0); }
-    to { transform: translateX(-50%); }
+    will-change: transform;
   }
 
   .art {
     position: relative;
     display: block;
     flex: none;
-    padding: 0.4rem;
+    padding: 0.45rem;
     background: #131316;
     border: 1px solid #2c2c30;
     transform: rotate(var(--rot));
@@ -79,26 +144,35 @@ import { art, PIXIV_HOME } from '../data/site';
     transition: transform 0.25s, border-color 0.25s;
   }
   .art:hover {
-    transform: rotate(0deg) scale(1.04);
+    transform: rotate(0deg) scale(1.03);
     border-color: #4a3d28;
     z-index: 5;
   }
   .art img {
     display: block;
-    height: 11rem;
+    height: 17rem;
     width: auto;
+    pointer-events: none;
+  }
+  @media (max-width: 760px) {
+    .art img {
+      height: 11rem;
+    }
+    .art-more {
+      height: 11rem !important;
+    }
   }
   .art-more {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 8rem;
-    height: 11rem;
+    width: 9rem;
+    height: 17rem;
     text-decoration: none;
   }
   .art-more-text {
     color: #8b867c;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     text-align: center;
     line-height: 1.9;
     letter-spacing: 0.08em;
