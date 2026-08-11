@@ -1,0 +1,495 @@
+---
+// 地底證物板:作品照片 + 金線 + 紙張視窗(仿 CookTWGame PaperDialog)
+import { pinned, threads, BOARD_HEIGHT } from '../data/site';
+---
+
+<section class="board" id="board" style={`height:${BOARD_HEIGHT}px`}>
+  <svg id="threads" aria-hidden="true"></svg>
+  <span class="photo photo-portrait" style="left:84%;top:20px;--rot:2.5deg;width:11rem">
+    <span class="pin"></span>
+    <span class="photo-visual"><img src="/images/cook.jpg" alt="酷可" loading="lazy" /></span>
+    <span class="photo-label"><span class="photo-head"><b>本人(?)</b></span></span>
+  </span>
+  {pinned.map((w) => (
+    <a
+      class="photo"
+      id={`pin-${w.id}`}
+      href={w.link || undefined}
+      style={`left:${w.pos.left}%;top:${w.pos.top}px;--rot:${w.rot}deg;width:${w.w}rem`}
+    >
+      <span class="pin"></span>
+      <span class="photo-visual" data-initial={w.img ? '' : w.name.slice(0, 1)}>
+        {w.img && <img src={w.img} alt={w.name} loading="lazy" />}
+        {w.status && <em class="photo-status">{w.status}</em>}
+      </span>
+      <span class="photo-label">
+        <span class="photo-head">
+          <b>{w.name}</b>
+          <i>{w.year}</i>
+        </span>
+        <span class="photo-desc">{w.desc}</span>
+        <span class="photo-tag">{w.tag}</span>
+      </span>
+    </a>
+  ))}
+</section>
+
+<div class="paper-overlay" id="paper-overlay" hidden>
+  <article class="paper" id="paper">
+    <p class="paper-meta"><span id="paper-year"></span> · <span id="paper-tag"></span></p>
+    <h3 class="paper-title" id="paper-title"></h3>
+    <figure class="paper-photo" id="paper-photo" hidden>
+      <img id="paper-photo-img" src="" alt="" />
+    </figure>
+    <p class="paper-desc" id="paper-desc"></p>
+    <ul class="paper-features" id="paper-features" hidden></ul>
+    <div class="paper-actions">
+      <a class="paper-go2" id="paper-go2" href="#" target="_blank" rel="noopener" hidden></a>
+      <a class="paper-go" id="paper-go" href="#">GO</a>
+      <span class="paper-sealed" id="paper-sealed" hidden>尚未公開</span>
+    </div>
+    <button class="paper-close" id="paper-close" aria-label="關閉">×</button>
+  </article>
+</div>
+
+<script define:vars={{ threads, pinned }}>
+  // 依實際版面位置把金線畫在 SVG 層,線帶一點下垂弧度
+  const board = document.getElementById('board');
+  const svg = document.getElementById('threads');
+
+  function draw() {
+    const bw = board.clientWidth;
+    const bh = board.clientHeight;
+    svg.setAttribute('viewBox', `0 0 ${bw} ${bh}`);
+    svg.innerHTML = '';
+    const boardRect = board.getBoundingClientRect();
+    for (const [a, b] of threads) {
+      const ea = document.querySelector(`#pin-${a} .pin`);
+      const eb = document.querySelector(`#pin-${b} .pin`);
+      if (!ea || !eb) continue;
+      const ra = ea.getBoundingClientRect();
+      const rb = eb.getBoundingClientRect();
+      const x1 = ra.left + ra.width / 2 - boardRect.left;
+      const y1 = ra.top + ra.height / 2 - boardRect.top;
+      const x2 = rb.left + rb.width / 2 - boardRect.left;
+      const y2 = rb.top + rb.height / 2 - boardRect.top;
+      const dist = Math.hypot(x2 - x1, y2 - y1);
+      const sag = Math.min(40, dist * 0.08);
+      const mx = (x1 + x2) / 2;
+      const my = (y1 + y2) / 2 + sag;
+      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      path.setAttribute('d', `M ${x1} ${y1} Q ${mx} ${my} ${x2} ${y2}`);
+      svg.appendChild(path);
+    }
+  }
+
+  draw();
+  window.addEventListener('resize', draw);
+  // 字型載入完成後位置可能微移,重畫一次
+  if (document.fonts?.ready) document.fonts.ready.then(draw);
+
+  // 紙張視窗:黑幕淡入 + 內容 Back.Out 回彈,GO 才真的前往
+  const overlay = document.getElementById('paper-overlay');
+  const paper = document.getElementById('paper');
+  let animating = false;
+
+  function openPaper(w) {
+    document.getElementById('paper-year').textContent = w.year;
+    document.getElementById('paper-tag').textContent = w.tag;
+    document.getElementById('paper-title').textContent = w.name;
+    document.getElementById('paper-desc').textContent = w.desc;
+    const photo = document.getElementById('paper-photo');
+    const photoImg = document.getElementById('paper-photo-img');
+    if (w.img) {
+      photoImg.src = w.img;
+      photoImg.alt = w.name;
+      photo.hidden = false;
+    } else {
+      photo.hidden = true;
+    }
+    const features = document.getElementById('paper-features');
+    if (w.features && w.features.length) {
+      features.innerHTML = '';
+      for (const f of w.features) {
+        const li = document.createElement('li');
+        li.textContent = f;
+        features.appendChild(li);
+      }
+      features.hidden = false;
+    } else {
+      features.hidden = true;
+    }
+    const go2 = document.getElementById('paper-go2');
+    if (w.link2) {
+      go2.href = w.link2;
+      go2.textContent = w.link2Label || '副連結';
+      go2.hidden = false;
+    } else {
+      go2.hidden = true;
+    }
+    const go = document.getElementById('paper-go');
+    const sealed = document.getElementById('paper-sealed');
+    if (w.link) {
+      go.href = w.link;
+      go.hidden = false;
+      sealed.hidden = true;
+    } else {
+      go.hidden = true;
+      sealed.hidden = false;
+    }
+    overlay.hidden = false;
+    animating = true;
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        overlay.classList.add('open');
+        setTimeout(() => (animating = false), 400);
+      });
+    });
+  }
+
+  function closePaper() {
+    if (animating) return;
+    animating = true;
+    overlay.classList.remove('open');
+    setTimeout(() => {
+      overlay.hidden = true;
+      animating = false;
+    }, 400);
+  }
+
+  for (const w of pinned) {
+    const el = document.getElementById(`pin-${w.id}`);
+    if (!el) continue;
+    el.addEventListener('click', (e) => {
+      e.preventDefault();
+      openPaper(w);
+    });
+  }
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) closePaper();
+  });
+  document.getElementById('paper-close').addEventListener('click', closePaper);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !overlay.hidden) closePaper();
+  });
+</script>
+
+<style>
+  .board {
+    position: relative;
+    margin-bottom: 4rem;
+  }
+  #threads {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+  #threads :global(path) {
+    fill: none;
+    stroke: rgba(232, 180, 99, 0.35);
+    stroke-width: 1;
+  }
+
+  .photo {
+    position: absolute;
+    display: block;
+    background: #131316;
+    border: 1px solid #2c2c30;
+    padding: 0.55rem 0.55rem 0.7rem;
+    color: inherit;
+    text-decoration: none;
+    transform: rotate(var(--rot));
+    transform-origin: 50% 0.5rem;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.45);
+    transition: transform 0.25s, border-color 0.25s, z-index 0s;
+  }
+  .photo:hover {
+    transform: rotate(0deg) scale(1.03);
+    border-color: #4a3d28;
+    z-index: 10;
+  }
+  .photo:hover b {
+    color: #e8b463;
+  }
+
+  .pin {
+    position: absolute;
+    top: -7px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #f5d9a8, #e8b463 45%, #8a6a35 100%);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+    z-index: 3;
+  }
+  .pin::after {
+    content: '';
+    position: absolute;
+    top: 30%;
+    left: 30%;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: #fff3dd;
+  }
+
+  .photo-visual {
+    position: relative;
+    display: block;
+    aspect-ratio: 4 / 3;
+    background: linear-gradient(160deg, #1a1a1f 0%, #101013 65%, #141318 100%);
+    border: 1px solid #232327;
+  }
+  .photo-visual::before {
+    content: attr(data-initial);
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.6rem;
+    font-weight: 600;
+    color: #26262b;
+  }
+  .photo-visual :global(img) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .photo-status {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    font-style: normal;
+    font-size: 0.68rem;
+    color: #e8b463;
+    border: 1px solid #4a3d28;
+    background: #0c0c0e;
+    padding: 0.05rem 0.4rem;
+  }
+
+  .photo-label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    padding: 0.55rem 0.2rem 0;
+  }
+  .photo-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.6rem;
+  }
+  .photo-head b {
+    font-weight: 500;
+    color: #f0ede6;
+    font-size: 0.92rem;
+    transition: color 0.2s;
+  }
+  .photo-head i {
+    font-style: normal;
+    color: #6f6a61;
+    font-size: 0.72rem;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .photo-desc {
+    color: #8b867c;
+    font-size: 0.78rem;
+    line-height: 1.5;
+  }
+  .photo-tag {
+    color: #6f6a61;
+    font-size: 0.68rem;
+    margin-top: 0.15rem;
+  }
+
+  /* 紙張視窗:舊紙張質感。hidden 切換的元素都要補 [hidden]{display:none},見 PITFALLS */
+  .paper-overlay[hidden] {
+    display: none;
+  }
+  .paper-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0);
+    transition: background 0.4s ease-out;
+  }
+  .paper-overlay.open {
+    background: rgba(0, 0, 0, 0.55);
+  }
+  .paper {
+    position: relative;
+    width: min(30rem, 88vw);
+    padding: 2.5rem 2.5rem 2.25rem;
+    background:
+      radial-gradient(ellipse at 30% 20%, rgba(255, 250, 235, 0.55), transparent 60%),
+      radial-gradient(ellipse at 75% 85%, rgba(120, 90, 45, 0.18), transparent 55%),
+      linear-gradient(165deg, #e6d7b3 0%, #dcc99e 55%, #cdb789 100%);
+    color: #3a2f1e;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
+    clip-path: polygon(
+      1.2% 2.8%, 12% 0.6%, 30% 2%, 52% 0.4%, 71% 2.4%, 88% 0.8%, 98.6% 3.4%,
+      99.4% 22%, 98% 45%, 99.6% 68%, 98.2% 88%, 97% 97.6%,
+      80% 99%, 58% 97.4%, 36% 99.4%, 15% 98%, 2.4% 99%,
+      0.8% 80%, 2% 58%, 0.4% 34%, 1.6% 12%
+    );
+    transform: scale(0.8) rotate(-1deg);
+    opacity: 0;
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease-out;
+  }
+  .paper-overlay.open .paper {
+    transform: scale(1) rotate(-1deg);
+    opacity: 1;
+  }
+  .paper-meta {
+    margin: 0 0 0.3rem;
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    color: #7a6642;
+  }
+  .paper-title {
+    margin: 0 0 0.75rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #2c2314;
+    border-bottom: 1px solid rgba(90, 70, 35, 0.35);
+    padding-bottom: 0.5rem;
+  }
+  .paper-photo {
+    margin: 0 0 1.2rem;
+    padding: 0.45rem;
+    background: #fdfaf2;
+    border: 1px solid rgba(90, 70, 35, 0.3);
+    box-shadow: 0 6px 14px rgba(40, 28, 10, 0.35);
+    transform: rotate(1.2deg);
+    width: fit-content;
+    max-width: 100%;
+  }
+  .paper-photo[hidden] {
+    display: none;
+  }
+  .paper-photo img {
+    display: block;
+    max-width: 100%;
+    max-height: 11rem;
+  }
+  .paper-desc {
+    margin: 0 0 1.6rem;
+    font-size: 0.92rem;
+    line-height: 1.9;
+    color: #4a3c25;
+  }
+  .paper-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    align-items: center;
+  }
+  .paper-go[hidden],
+  .paper-go2[hidden],
+  .paper-sealed[hidden],
+  .paper-features[hidden] {
+    display: none;
+  }
+  .paper-features {
+    margin: -0.6rem 0 1.4rem;
+    padding-left: 1.3rem;
+    font-size: 0.85rem;
+    line-height: 1.9;
+    color: #4a3c25;
+  }
+  .paper-go2 {
+    display: inline-block;
+    padding: 0.3rem 1rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: #59503c;
+    text-decoration: none;
+    border: 2px solid #59503c;
+    border-radius: 2px;
+    transform: rotate(2deg);
+    opacity: 0.75;
+    transition: transform 0.2s, opacity 0.2s;
+  }
+  .paper-go2:hover {
+    transform: rotate(2deg) scale(1.06);
+    opacity: 1;
+  }
+  .paper-go {
+    display: inline-block;
+    padding: 0.35rem 1.6rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: #6d1f1f;
+    text-decoration: none;
+    border: 2px solid #6d1f1f;
+    border-radius: 2px;
+    transform: rotate(-4deg);
+    opacity: 0.85;
+    transition: transform 0.2s, opacity 0.2s;
+  }
+  .paper-go:hover {
+    transform: rotate(-4deg) scale(1.08);
+    opacity: 1;
+  }
+  .paper-sealed {
+    padding: 0.35rem 1.2rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: #59503c;
+    border: 2px solid #59503c;
+    border-radius: 2px;
+    transform: rotate(-4deg);
+    opacity: 0.55;
+  }
+  .paper-close {
+    position: absolute;
+    top: 0.9rem;
+    right: 1.1rem;
+    background: none;
+    border: none;
+    font-size: 1.3rem;
+    color: #7a6642;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0.2rem;
+  }
+  .paper-close:hover {
+    color: #3a2f1e;
+  }
+
+  /* 窄螢幕:板收起來,照片改為交錯堆疊 */
+  @media (max-width: 760px) {
+    .board {
+      height: auto !important;
+      display: flex;
+      flex-direction: column;
+      gap: 2.2rem;
+      align-items: center;
+    }
+    #threads {
+      display: none;
+    }
+    .photo {
+      position: static;
+      width: min(22rem, 92%) !important;
+    }
+    .photo:nth-of-type(odd) {
+      align-self: flex-start;
+    }
+    .photo:nth-of-type(even) {
+      align-self: flex-end;
+    }
+  }
+</style>

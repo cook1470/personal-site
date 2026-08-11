@@ -7,8 +7,9 @@
 
 ## 接手必知
 
-- 全站只有一頁 `src/pages/index.astro`(含資料、標記、樣式、腳本)。作品資料在檔頭
-  的 pinned / art / links 陣列,改內容不用動邏輯。
+- 結構:`src/data/site.ts`(pinned / threads / art / links 資料,改內容不用動邏輯)、
+  `src/components/`(Hero 像素世界、Board 證物板+紙張視窗、Gallery 畫廊)、
+  `src/pages/index.astro` 只做組裝與全域樣式、背景微粒。
 - 設計依據:`.agent/features/creator_profile.md`(創作者輪廓與美學規範,動視覺前必讀)。
 - 部署:npm run build → npx wrangler pages deploy dist --project-name personal-site --branch master。
   網域、DNS token、各子網域見 PROJECT_CONTEXT.md。

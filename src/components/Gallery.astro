@@ -1,0 +1,88 @@
+---
+// 畫廊:pixiv 縮圖瀑布流,同證物板的延伸,小圖釘 + 各自微傾
+import { art } from '../data/site';
+---
+
+<section class="gallery">
+  <h2>畫</h2>
+  <p class="gallery-note">點圖可到 pixiv 看原圖。</p>
+  <div class="gallery-wall">
+    {art.map((a, i) => (
+      <a
+        class="art"
+        href={`https://www.pixiv.net/artworks/${a.id}`}
+        target="_blank"
+        rel="noopener"
+        style={`--rot:${((i * 7) % 5) - 2}deg`}
+      >
+        <span class="pin pin-small"></span>
+        <img src={`/images/art/${a.id}.jpg`} alt={a.title} title={a.title} loading="lazy" />
+      </a>
+    ))}
+  </div>
+</section>
+
+<style>
+  .gallery {
+    margin: 2rem 0 4rem;
+  }
+  .gallery h2 {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #f0ede6;
+    margin: 0;
+  }
+  .gallery-note {
+    color: #6f6a61;
+    font-size: 0.8rem;
+    margin: 0.2rem 0 1.5rem;
+  }
+  .gallery-wall {
+    columns: 5 12rem;
+    column-gap: 1.1rem;
+  }
+  .art {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    margin: 0 0 1.1rem;
+    padding: 0.4rem;
+    background: #131316;
+    border: 1px solid #2c2c30;
+    transform: rotate(var(--rot));
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.4);
+    transition: transform 0.25s, border-color 0.25s;
+  }
+  .art:hover {
+    transform: rotate(0deg) scale(1.04);
+    border-color: #4a3d28;
+    z-index: 5;
+  }
+  .art img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .pin {
+    position: absolute;
+    top: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #f5d9a8, #e8b463 45%, #8a6a35 100%);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+    z-index: 3;
+  }
+  .pin::after {
+    content: '';
+    position: absolute;
+    top: 30%;
+    left: 30%;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: #fff3dd;
+  }
+</style>
