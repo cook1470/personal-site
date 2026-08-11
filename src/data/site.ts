@@ -10,6 +10,7 @@ export interface Work {
   link: string;
   link2?: string;
   link2Label?: string;
+  video?: string; // YouTube 影片 ID,紙張視窗開啟時才嵌入
   features?: string[];
   img: string;
   pos: { left: number; top: number };
@@ -25,7 +26,7 @@ export const pinned: Work[] = [
   { id: 'ryvexia', name: 'Ryvexia', year: '2024', tag: '音樂遊戲', desc: '譜面編輯器附上,曲庫開放投稿。', status: '', link: 'https://ryvexia.gamelet.online/', img: '/images/works/ryvexia.jpg', pos: { left: 6, top: 560 }, rot: 1.5, w: 16 },
   { id: 'pixitank', name: 'PixiTank', year: '2026', tag: '多人坦克對戰', desc: '八人混戰,子彈會互抵。', status: '', link: 'https://pixitank.gamelet.online/', img: '/images/works/pixitank.jpg', pos: { left: 42, top: 700 }, rot: -2.8, w: 15 },
   { id: 'dunjo', name: 'Dunjo', year: '2026', tag: '平台跳躍', desc: '關卡是玩家自己畫的。', status: '', link: 'https://dunjo.gamelet.online/', img: '/images/works/dunjo.jpg', pos: { left: 72, top: 820 }, rot: 1.2, w: 14 },
-  { id: 'witch', name: '小女巫・啟程', year: '2025', tag: '飛行射擊', desc: '鐵人賽三十天寫出來的遊戲。', status: '', link: 'https://littlewitch-thejourney.gamelet.online/', img: '/images/works/witch.jpg', pos: { left: 14, top: 900 }, rot: -1.6, w: 15 },
+  { id: 'witch', name: '小女巫・啟程', year: '2025', tag: '飛行射擊', desc: '鐵人賽三十天寫出來的遊戲。', status: '', link: 'https://littlewitch-thejourney.gamelet.online/', video: 'A1rRHKqjCSc', img: '/images/works/witch.jpg', pos: { left: 14, top: 900 }, rot: -1.6, w: 15 },
   { id: 'bingo', name: '五十音 BINGO', year: '2025', tag: '日文小品', desc: '連線之前,先認得它們。', status: '', link: 'https://gojuuonbingo.gamelet.online/', img: '/images/works/bingo.jpg', pos: { left: 48, top: 1030 }, rot: 2.2, w: 13 },
   { id: 'cktw', name: 'CK_TWEventsGame', year: '2021–2024', tag: '光暈戰記同人', desc: '三年,一百二十個版本。', status: '', link: 'https://ck-tweventsgame.gamelet.online/', img: '/images/works/cktw.jpg', pos: { left: 24, top: 1180 }, rot: -2.0, w: 17 },
 ];

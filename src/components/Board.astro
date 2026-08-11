@@ -41,6 +41,7 @@ import { pinned, threads, BOARD_HEIGHT } from '../data/site';
     <figure class="paper-photo" id="paper-photo" hidden>
       <img id="paper-photo-img" src="" alt="" />
     </figure>
+    <div class="paper-video" id="paper-video" hidden></div>
     <p class="paper-desc" id="paper-desc"></p>
     <ul class="paper-features" id="paper-features" hidden></ul>
     <div class="paper-actions">
@@ -98,9 +99,23 @@ import { pinned, threads, BOARD_HEIGHT } from '../data/site';
     document.getElementById('paper-tag').textContent = w.tag;
     document.getElementById('paper-title').textContent = w.name;
     document.getElementById('paper-desc').textContent = w.desc;
+    const video = document.getElementById('paper-video');
+    video.innerHTML = '';
+    if (w.video) {
+      const iframe = document.createElement('iframe');
+      iframe.src = `https://www.youtube.com/embed/${w.video}`;
+      iframe.title = w.name;
+      iframe.allow = 'accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+      iframe.allowFullscreen = true;
+      video.appendChild(iframe);
+      video.hidden = false;
+    } else {
+      video.hidden = true;
+    }
     const photo = document.getElementById('paper-photo');
     const photoImg = document.getElementById('paper-photo-img');
-    if (w.img) {
+    // 有影片就不再放靜態截圖,版面留給影片
+    if (w.img && !w.video) {
       photoImg.src = w.img;
       photoImg.alt = w.name;
       photo.hidden = false;
@@ -154,6 +169,8 @@ import { pinned, threads, BOARD_HEIGHT } from '../data/site';
     setTimeout(() => {
       overlay.hidden = true;
       animating = false;
+      // 移除 iframe 停止播放
+      document.getElementById('paper-video').innerHTML = '';
     }, 400);
   }
 
@@ -377,6 +394,23 @@ import { pinned, threads, BOARD_HEIGHT } from '../data/site';
   }
   .paper-photo[hidden] {
     display: none;
+  }
+  .paper-video {
+    margin: 0 0 1.2rem;
+    padding: 0.45rem;
+    background: #fdfaf2;
+    border: 1px solid rgba(90, 70, 35, 0.3);
+    box-shadow: 0 6px 14px rgba(40, 28, 10, 0.35);
+    transform: rotate(-0.8deg);
+  }
+  .paper-video[hidden] {
+    display: none;
+  }
+  .paper-video :global(iframe) {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border: 0;
   }
   .paper-photo img {
     display: block;
