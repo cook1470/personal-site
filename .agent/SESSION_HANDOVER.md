@@ -22,7 +22,9 @@
 ## 目前狀態
 
 網站完整上線,頁面順序:hero 像素世界 → 證物板 10 作品(連結全數填妥,僅 PhantomLedger
-開發中無連結)→「文」文章區(iThome 鐵人賽兩系列)→「磚」MC 地圖區(高中三張,連巴哈)
-→ 畫廊膠卷帶(精選 10 張,自動漂移+拖曳,原地點擊才導 pixiv)→ footer。
+開發中無連結)→「文」文章區(iThome 鐵人賽兩系列+嘎姆期刊受訪)→「磚」MC 地圖區
+(高中三張,連巴哈)→ 畫廊膠卷帶(精選 10 張,自動漂移+拖曳,原地點擊才導 pixiv)→ footer。
 文/磚共用 DocSection 元件,資料在 site.ts 的 articles / mcMaps。社群連結含巴哈姆特。
+紙張視窗桌面寬 44rem,支援 YouTube 影片(Work.video 存 ID,開啟才嵌 iframe、關閉移除;
+有 video 就不顯示靜態截圖),目前小女巫有影片。部署暫鎖 wrangler@4.120.0(見 PITFALLS)。
 剩餘工作見 TODO.md。
