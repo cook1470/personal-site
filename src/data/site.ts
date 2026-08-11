@@ -49,7 +49,8 @@ export const threads: [string, string][] = [
 
 export const BOARD_HEIGHT = 1900;
 
-// 畫廊:pixiv 作品縮圖(public/images/art/<id>.jpg),點擊回 pixiv 原頁
+// 畫廊精選:pixiv 作品縮圖(public/images/art/<id>.jpg),點擊回 pixiv 原頁。
+// 縮圖檔全數保留在 public/images/art/,要換精選改這裡即可。
 export const art = [
   { id: '131649751', title: '2025 UC 生日快樂!' },
   { id: '131590974', title: '2025 zizi 生日快樂!' },
@@ -60,28 +61,10 @@ export const art = [
   { id: '127347725', title: '2025 小又 生日快樂!' },
   { id: '126848943', title: '2025 Tong 生日快樂!' },
   { id: '122109596', title: '哆啦A夢生誕祭 2024' },
-  { id: '122084482', title: 'のんちぃ' },
-  { id: '121900382', title: '健壯的桃野薔薇' },
-  { id: '121870206', title: '不死川実弥' },
   { id: '121738829', title: '兔女郎晚晚' },
-  { id: '121658783', title: '喝水(動圖)' },
-  { id: '121626728', title: '9S' },
-  { id: '121513808', title: '是在Kuma' },
-  { id: '121468569', title: 'Mei' },
-  { id: '121368915', title: '靠很近的晚晚' },
-  { id: '121319984', title: '晚晚包貨中' },
-  { id: '121291048', title: '玖依炭' },
-  { id: '121204034', title: '阿熊' },
-  { id: '104897257', title: '梅可MEKO' },
-  { id: '100974666', title: 'ドラえもん誕生日' },
-  { id: '100345461', title: '夕刻ロベル' },
-  { id: '100187485', title: '柴犬抱枕' },
-  { id: '100180690', title: '奏手イヅル立ち絵' },
-  { id: '100145986', title: '僕(線稿)' },
-  { id: '100099027', title: '生氣的奏手イヅル' },
-  { id: '98708829', title: '皇家騎士' },
-  { id: '97748427', title: '天影武士' },
 ];
+
+export const PIXIV_HOME = 'https://www.pixiv.net/users/18579339';
 
 export const links = [
   { name: 'YouTube', url: 'https://www.youtube.com/@cook1470' },

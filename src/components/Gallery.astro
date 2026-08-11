@@ -1,24 +1,35 @@
 ---
-// 畫廊:pixiv 縮圖瀑布流,同證物板的延伸,小圖釘 + 各自微傾
-import { art } from '../data/site';
+// 畫廊:精選圖的橫向膠卷帶,無限循環緩慢左移,懸停暫停。完整作品導去 pixiv。
+// 無縫循環靠把整條內容畫兩份、位移 -50%,所以 track 內是兩段相同的 items。
+import { art, PIXIV_HOME } from '../data/site';
 ---
 
 <section class="gallery">
   <h2>畫</h2>
   <p class="gallery-note">點圖可到 pixiv 看原圖。</p>
-  <div class="gallery-wall">
-    {art.map((a, i) => (
-      <a
-        class="art"
-        href={`https://www.pixiv.net/artworks/${a.id}`}
-        target="_blank"
-        rel="noopener"
-        style={`--rot:${((i * 7) % 5) - 2}deg`}
-      >
-        <span class="pin pin-small"></span>
-        <img src={`/images/art/${a.id}.jpg`} alt={a.title} title={a.title} loading="lazy" />
-      </a>
-    ))}
+  <div class="film-strip">
+    <div class="film-track">
+      {[0, 1].map(() => (
+        <>
+          {art.map((a, i) => (
+            <a
+              class="art"
+              href={`https://www.pixiv.net/artworks/${a.id}`}
+              target="_blank"
+              rel="noopener"
+              style={`--rot:${((i * 7) % 5) - 2}deg`}
+            >
+              <span class="pin pin-small"></span>
+              <img src={`/images/art/${a.id}.jpg`} alt={a.title} title={a.title} loading="lazy" />
+            </a>
+          ))}
+          <a class="art art-more" href={PIXIV_HOME} target="_blank" rel="noopener" style="--rot:1.5deg">
+            <span class="pin pin-small"></span>
+            <span class="art-more-text">去 pixiv<br />看更多 →</span>
+          </a>
+        </>
+      ))}
+    </div>
   </div>
 </section>
 
@@ -37,15 +48,29 @@ import { art } from '../data/site';
     font-size: 0.8rem;
     margin: 0.2rem 0 1.5rem;
   }
-  .gallery-wall {
-    columns: 5 12rem;
-    column-gap: 1.1rem;
+  .film-strip {
+    overflow: hidden;
+    padding: 1rem 0 1.4rem;
   }
+  .film-track {
+    display: flex;
+    align-items: center;
+    gap: 1.4rem;
+    width: max-content;
+    animation: film-scroll 60s linear infinite;
+  }
+  .film-strip:hover .film-track {
+    animation-play-state: paused;
+  }
+  @keyframes film-scroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
   .art {
     position: relative;
-    display: inline-block;
-    width: 100%;
-    margin: 0 0 1.1rem;
+    display: block;
+    flex: none;
     padding: 0.4rem;
     background: #131316;
     border: 1px solid #2c2c30;
@@ -60,9 +85,28 @@ import { art } from '../data/site';
   }
   .art img {
     display: block;
-    width: 100%;
-    height: auto;
+    height: 11rem;
+    width: auto;
   }
+  .art-more {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 8rem;
+    height: 11rem;
+    text-decoration: none;
+  }
+  .art-more-text {
+    color: #8b867c;
+    font-size: 0.85rem;
+    text-align: center;
+    line-height: 1.9;
+    letter-spacing: 0.08em;
+  }
+  .art-more:hover .art-more-text {
+    color: #e8b463;
+  }
+
   .pin {
     position: absolute;
     top: -5px;
