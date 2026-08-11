@@ -88,4 +88,5 @@ export const links = [
   { name: 'X', url: 'https://x.com/cook1470' },
   { name: 'GitHub', url: 'https://github.com/cook1470' },
   { name: 'pixiv', url: 'https://www.pixiv.net/users/18579339' },
+  { name: '巴哈姆特', url: 'https://home.gamer.com.tw/profile/index.php?owner=cook1470' },
 ];
