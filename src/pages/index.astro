@@ -1,7 +1,9 @@
 ---
 import Hero from '../components/Hero.astro';
 import Board from '../components/Board.astro';
+import DocSection from '../components/DocSection.astro';
 import Gallery from '../components/Gallery.astro';
+import { articles, mcMaps } from '../data/site';
 ---
 
 <html lang="zh-Hant">
@@ -19,6 +21,8 @@ import Gallery from '../components/Gallery.astro';
 
     <main>
       <Board />
+      <DocSection title="文" note="寫過的教學系列,點了去 iThome 看。" items={articles} />
+      <DocSection title="磚" note="高中時期做的 Minecraft 地圖,收藏在巴哈創作區。" items={mcMaps} />
       <Gallery />
       <footer>
         <p>© 2026 酷可 cook</p>

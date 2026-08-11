@@ -1,0 +1,97 @@
+---
+// 檔案文件卡區塊:文章、MC 舊藏共用。整卡可點,直接開外部連結。
+import type { Doc } from '../data/site';
+
+interface Props {
+  title: string;
+  note?: string;
+  items: Doc[];
+}
+const { title, note, items } = Astro.props;
+---
+
+<section class="docs">
+  <h2>{title}</h2>
+  {note && <p class="docs-note">{note}</p>}
+  <div class="doc-row">
+    {items.map((d, i) => (
+      <a class="doc" href={d.link} target="_blank" rel="noopener" style={`--rot:${((i * 3) % 3) - 1}deg`}>
+        <span class="doc-tab">{d.tag}</span>
+        <b class="doc-name">{d.name}</b>
+        <span class="doc-desc">{d.desc}</span>
+        <span class="doc-year">{d.year}</span>
+      </a>
+    ))}
+  </div>
+</section>
+
+<style>
+  .docs {
+    margin: 2rem 0 4rem;
+  }
+  .docs h2 {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #f0ede6;
+    margin: 0;
+  }
+  .docs-note {
+    color: #6f6a61;
+    font-size: 0.8rem;
+    margin: 0.2rem 0 1.5rem;
+  }
+  .doc-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.2rem;
+  }
+  .doc {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    width: 17rem;
+    padding: 1.1rem 1.2rem 0.9rem;
+    background: #131316;
+    border: 1px solid #2c2c30;
+    text-decoration: none;
+    transform: rotate(var(--rot));
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.4);
+    transition: transform 0.25s, border-color 0.25s;
+  }
+  .doc:hover {
+    transform: rotate(0deg) scale(1.03);
+    border-color: #4a3d28;
+    z-index: 5;
+  }
+  .doc:hover .doc-name {
+    color: #e8b463;
+  }
+  .doc-tab {
+    position: absolute;
+    top: -0.7rem;
+    left: 0.9rem;
+    font-size: 0.68rem;
+    color: #e8b463;
+    background: #0c0c0e;
+    border: 1px solid #4a3d28;
+    padding: 0.05rem 0.5rem;
+  }
+  .doc-name {
+    font-weight: 500;
+    color: #f0ede6;
+    font-size: 0.95rem;
+    transition: color 0.2s;
+  }
+  .doc-desc {
+    color: #8b867c;
+    font-size: 0.78rem;
+    line-height: 1.6;
+  }
+  .doc-year {
+    color: #6f6a61;
+    font-size: 0.72rem;
+    font-variant-numeric: tabular-nums;
+    margin-top: 0.3rem;
+  }
+</style>

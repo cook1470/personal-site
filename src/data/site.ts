@@ -28,8 +28,6 @@ export const pinned: Work[] = [
   { id: 'witch', name: '小女巫・啟程', year: '2025', tag: '飛行射擊', desc: '鐵人賽三十天寫出來的遊戲。', status: '', link: 'https://littlewitch-thejourney.gamelet.online/', img: '/images/works/witch.jpg', pos: { left: 14, top: 900 }, rot: -1.6, w: 15 },
   { id: 'bingo', name: '五十音 BINGO', year: '2025', tag: '日文小品', desc: '連線之前,先認得它們。', status: '', link: 'https://gojuuonbingo.gamelet.online/', img: '/images/works/bingo.jpg', pos: { left: 48, top: 1030 }, rot: 2.2, w: 13 },
   { id: 'cktw', name: 'CK_TWEventsGame', year: '2021–2024', tag: '光暈戰記同人', desc: '三年,一百二十個版本。', status: '', link: 'https://ck-tweventsgame.gamelet.online/', img: '/images/works/cktw.jpg', pos: { left: 24, top: 1180 }, rot: -2.0, w: 17 },
-  { id: 'ironman2023', name: '什麼!在網頁上也可以寫遊戲?', year: '2023', tag: '鐵人賽教學系列', desc: '30 天,帶你在瀏覽器裡做出遊戲。', status: '', link: 'https://ithelp.ithome.com.tw/users/20152368/ironman/6932', img: '', pos: { left: 60, top: 1330 }, rot: 1.6, w: 18 },
-  { id: 'ironman2025', name: '用 PixiJS 寫遊戲!', year: '2025', tag: '鐵人賽教學系列', desc: '從 Sprite 到特效,PixiJS 入門 30 講。', status: '', link: 'https://ithelp.ithome.com.tw/users/20152368/ironman/8417', img: '', pos: { left: 20, top: 1520 }, rot: -1.8, w: 17 },
 ];
 
 // 金線的牽法:大致沿時間與系列關係
@@ -43,11 +41,29 @@ export const threads: [string, string][] = [
   ['phantasia', 'ledger'],
   ['dunjo', 'cooktw'],
   ['ryvexia', 'ledger'],
-  ['ironman2023', 'cktw'],
-  ['ironman2025', 'witch'],
 ];
 
-export const BOARD_HEIGHT = 1900;
+export const BOARD_HEIGHT = 1500;
+
+// 文件區塊(文章、MC 舊藏):非圖釘照片,走檔案文件卡形式
+export interface Doc {
+  name: string;
+  year: string;
+  tag: string;
+  desc: string;
+  link: string;
+}
+
+export const articles: Doc[] = [
+  { name: '什麼!在網頁上也可以寫遊戲?', year: '2023', tag: 'iThome 鐵人賽', desc: '30 天,帶你在瀏覽器裡做出遊戲。', link: 'https://ithelp.ithome.com.tw/users/20152368/ironman/6932' },
+  { name: '用 PixiJS 寫遊戲!', year: '2025', tag: 'iThome 鐵人賽', desc: '從 Sprite 到特效,PixiJS 入門 30 講。', link: 'https://ithelp.ithome.com.tw/users/20152368/ironman/8417' },
+];
+
+export const mcMaps: Doc[] = [
+  { name: '阿呆的大冒險', year: '2018', tag: '小品劇情', desc: '1.13 劇情地圖。', link: 'https://forum.gamer.com.tw/Co.php?bsn=18673&sn=874743' },
+  { name: '獄牢', year: '2018', tag: '恐怖解謎', desc: '1.13 小品恐怖解謎。', link: 'https://forum.gamer.com.tw/Co.php?bsn=18673&sn=875924' },
+  { name: '轟炸超人', year: '2018', tag: '多人小品', desc: 'function 指令包,和朋友互丟炸彈。', link: 'https://forum.gamer.com.tw/Co.php?bsn=18673&sn=876780' },
+];
 
 // 畫廊精選:pixiv 作品縮圖(public/images/art/<id>.jpg),點擊回 pixiv 原頁。
 // 縮圖檔全數保留在 public/images/art/,要換精選改這裡即可。
