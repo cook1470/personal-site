@@ -11,6 +11,8 @@ import { articles, mcMaps } from '../data/site';
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" href="/favicon-180.png" />
     <title>酷可 cook — 遊戲開發與繪畫</title>
     <meta name="description" content="酷可(cook)的作品檔案庫:遊戲、引擎、工具與畫。" />
   </head>
@@ -25,6 +27,7 @@ import { articles, mcMaps } from '../data/site';
       <DocSection title="磚" note="高中時期做的 Minecraft 地圖,收藏在巴哈創作區。" items={mcMaps} />
       <Gallery />
       <footer>
+        <p>合作、回報或只是想聊聊 — <a href="mailto:b43096022@gmail.com">b43096022@gmail.com</a></p>
         <p>© 2026 酷可 cook</p>
       </footer>
     </main>
@@ -57,6 +60,18 @@ import { articles, mcMaps } from '../data/site';
     padding: 2rem 0 2.5rem;
     color: #55524b;
     font-size: 0.8rem;
+  }
+  footer p {
+    margin: 0.2rem 0;
+  }
+  footer a {
+    color: #8a7a5e;
+    text-decoration: none;
+    border-bottom: 1px solid #3a3325;
+  }
+  footer a:hover {
+    color: #e8b463;
+    border-bottom-color: #e8b463;
   }
 </style>
 
