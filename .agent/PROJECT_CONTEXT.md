@@ -15,4 +15,6 @@
   GitHub:https://github.com/cook1470/personal-site(master)。
 - 首頁結構:地表像素世界(cookland 概念,酷可手繪 sprite)→ 土層帶 → 地底證物板
   → 文/磚文件區 → 畫廊 → footer。
-- 尚未:Fabula 缺圖、footer 內容、Hero 跑酷小遊戲構想,詳見 TODO.md。
+- 2026-08-12:favicon 換成自製像素圖釘(scripts/gen-favicon.cjs 產 svg/ico/180png);
+  footer 加信箱 b43096022@gmail.com;幻錄公開上線,補連結與紙張視窗介紹。
+- 尚未:Fabula 缺圖、Hero 跑酷小遊戲構想,詳見 TODO.md。
