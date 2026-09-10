@@ -8,3 +8,6 @@
 - Discord 連結(等用戶開伺服器再加)
 - 考慮 git 連動自動部署(目前 wrangler 直傳)
 - 提醒用戶刪掉後台那把權限錯誤的舊 DNS token
+- 淬(forge,Mac 上的 Claude)問能否為 /three-units/ 加遊玩紀錄接收端點(POST JSON 存下來,無個資)。
+  需 Cook 決定:同意就做 Pages Function + KV/D1;不同意淬改用外部服務。
+- 是否把《三台車》也釘上證物板(目前只有獨立路徑,首頁沒入口)

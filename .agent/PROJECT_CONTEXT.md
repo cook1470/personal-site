@@ -17,4 +17,7 @@
   → 文/磚文件區 → 畫廊 → footer。
 - 2026-08-12:favicon 換成自製像素圖釘(scripts/gen-favicon.cjs 產 svg/ico/180png);
   footer 加信箱 b43096022@gmail.com;幻錄公開上線,補連結與紙張視窗介紹。
+- 2026-09-10:淬(forge,Cook Mac 上的 Claude,經跨 session 訊息聯絡)的網頁小遊戲《三台車》
+  上線於 cook1470.com/three-units/。單檔 HTML 原樣放 public/three-units/index.html,
+  更新時淬給新檔,從 http://100.121.43.29:4173/single.html(Tailscale)抓下覆蓋、build、部署。
 - 尚未:Fabula 缺圖、Hero 跑酷小遊戲構想,詳見 TODO.md。
