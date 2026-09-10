@@ -28,6 +28,7 @@ export const pinned: Work[] = [
   { id: 'dunjo', name: 'Dunjo', year: '2026', tag: '平台跳躍', desc: '關卡是玩家自己畫的。', status: '', link: 'https://dunjo.gamelet.online/', img: '/images/works/dunjo.jpg', pos: { left: 72, top: 820 }, rot: 1.2, w: 14 },
   { id: 'witch', name: '小女巫・啟程', year: '2025', tag: '飛行射擊', desc: '鐵人賽三十天寫出來的遊戲。', status: '', link: 'https://littlewitch-thejourney.gamelet.online/', video: 'A1rRHKqjCSc', img: '/images/works/witch.jpg', pos: { left: 14, top: 900 }, rot: -1.6, w: 15 },
   { id: 'bingo', name: '五十音 BINGO', year: '2025', tag: '日文小品', desc: '連線之前,先認得它們。', status: '', link: 'https://gojuuonbingo.gamelet.online/', img: '/images/works/bingo.jpg', pos: { left: 48, top: 1030 }, rot: 2.2, w: 13 },
+  { id: 'three-units', name: '三台車', year: '2026', tag: '夜班派遣', desc: '你只聽得到打電話的人。', status: '', link: 'https://three-units.cook1470.com/', features: ['半夜十一點到清晨六點,你是救護派遣員,手上只有三台車。', '你看不到現場,只能從電話裡的聲音判斷誰先等、誰不能等——而最需要車的人,不一定講得最急。', '一夜約二十分鐘,中英文皆可玩。'], img: '/images/works/three-units.jpg', pos: { left: 62, top: 1160 }, rot: 1.6, w: 16 },
   { id: 'cktw', name: 'CK_TWEventsGame', year: '2021–2024', tag: '光暈戰記同人', desc: '三年,一百二十個版本。', status: '', link: 'https://ck-tweventsgame.gamelet.online/', img: '/images/works/cktw.jpg', pos: { left: 24, top: 1180 }, rot: -2.0, w: 17 },
 ];
 
@@ -42,6 +43,7 @@ export const threads: [string, string][] = [
   ['phantasia', 'ledger'],
   ['dunjo', 'cooktw'],
   ['ryvexia', 'ledger'],
+  ['ledger', 'three-units'],
 ];
 
 export const BOARD_HEIGHT = 1500;
