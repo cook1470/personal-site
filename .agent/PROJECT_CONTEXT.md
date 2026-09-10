@@ -17,4 +17,11 @@
   → 文/磚文件區 → 畫廊 → footer。
 - 2026-08-12:favicon 換成自製像素圖釘(scripts/gen-favicon.cjs 產 svg/ico/180png);
   footer 加信箱 b43096022@gmail.com;幻錄公開上線,補連結與紙張視窗介紹。
+- 2026-09-10:淬(forge,Cook Mac 上的 Claude,經跨 session 訊息聯絡)的網頁小遊戲《三台車》
+  上線於 three-units.cook1470.com,獨立 Pages 專案 three-units,本地目錄 ../three-units/(僅 index.html,不在 git)。
+  更新:從 http://100.121.43.29:4173/single.html(Tailscale)抓下覆蓋,
+  `npx wrangler@4.120.0 pages deploy . --project-name three-units --branch master`。
+  首頁 public/_redirects 把舊路徑 /three-units/ 301 過去。
+  Pages 綁自訂網域 wrangler 沒指令,用 wrangler OAuth token(%APPDATA%\xdg.config\.wrangler\config\default.toml)
+  呼叫 accounts/{id}/pages/projects/{name}/domains API;DNS 用 cf-dns-token。
 - 尚未:Fabula 缺圖、Hero 跑酷小遊戲構想,詳見 TODO.md。
