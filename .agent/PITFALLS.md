@@ -3,6 +3,11 @@
 - wrangler 未鎖版時 npx 抓最新版,4.121.0 相依的 miniflare 版本不存在導致部署失敗
   (2026-08-12)。部署改用 `npx wrangler@4.120.0`;上游修復後可拿掉鎖版。
 
+- wrangler pages deploy 的 `--branch` 決定進 production 還是 preview,各專案的
+  production 分支不一定相同:personal-site / three-units 是 master,
+  phantasia / phantasia-demo 是 main。帶錯只會安靜地落在 Preview,
+  預覽網址內容正確、正式網域不動,很難察覺。
+
 - HTML `hidden` 屬性會被自己 CSS 的 `display: flex/inline-block` 蓋掉(UA 樣式必輸給
   作者樣式)。已踩兩次(paper-overlay 整頁不可點、paper-go 未公開仍顯示 GO)。
   規則:任何會用 `hidden` 切換的元素,設 display 時必須同時寫 `[hidden] { display: none }`。
