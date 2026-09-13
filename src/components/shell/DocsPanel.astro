@@ -48,15 +48,19 @@ const { id, title, sub, docs } = Astro.props;
     gap: 0.15rem 1rem;
     align-items: center;
     padding: 0.8rem 1rem;
-    border-left: 2px solid rgba(232, 180, 99, 0.35);
-    background: rgba(20, 18, 22, 0.55);
+    background: #241d2a;
     text-decoration: none;
-    transition: background 140ms ease-out, border-color 140ms ease-out, transform 140ms ease-out;
+    box-shadow:
+      inset -4px -4px 0 0 #140f18,
+      inset 4px 4px 0 0 #3d3146;
+    transition: background 100ms, transform 100ms;
   }
   .list a:hover {
-    background: rgba(36, 30, 20, 0.8);
-    border-color: #e8b463;
+    background: #3a2c1e;
     transform: translateX(5px);
+    box-shadow:
+      inset -4px -4px 0 0 #1c1410,
+      inset 4px 4px 0 0 #6b4f2a;
   }
   .row-meta {
     grid-area: meta;

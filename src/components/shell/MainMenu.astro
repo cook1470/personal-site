@@ -96,14 +96,16 @@ const items = [
     display: flex;
     align-items: baseline;
     gap: 0.7rem;
-    padding: 0.35rem 1.1rem 0.35rem 0.7rem;
+    padding: 0.4rem 1.2rem 0.45rem 0.8rem;
     border: 0;
-    background: rgba(12, 12, 14, 0.55);
-    clip-path: polygon(0 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+    background: #2b2030;
     cursor: pointer;
     font: inherit;
     color: #f0c37d;
-    transition: background 140ms ease-out, color 140ms ease-out, transform 140ms ease-out;
+    box-shadow:
+      inset -4px -4px 0 0 #170f1c,
+      inset 4px 4px 0 0 #453552;
+    transition: background 100ms, color 100ms, transform 100ms;
   }
   .item:hover,
   .item:focus-visible {
@@ -111,6 +113,15 @@ const items = [
     color: #1a1206;
     transform: translateX(6px);
     outline: none;
+    box-shadow:
+      inset -4px -4px 0 0 #a8763c,
+      inset 4px 4px 0 0 #f8e0b0;
+  }
+  .item:active {
+    transform: translateX(2px);
+    box-shadow:
+      inset 4px 4px 0 0 #a8763c,
+      inset -4px -4px 0 0 #f8e0b0;
   }
   .item .key {
     font-family: ui-monospace, monospace;
