@@ -1,72 +1,157 @@
 ---
-// 關於分頁：頭像、自述、聯絡方式。
-import Panel from './Panel.astro';
+// 關於：不套視窗，整片偏黑的半透明背景，圓框大頭貼置中，資訊在下面。
 import { links } from '../../data/site';
 ---
 
-<Panel id="about" title="關於" sub="COOK" size="sm">
-  <div class="about">
+<div class="about" id="panel-about" data-panel-id="about" hidden>
+  <button class="quit" data-close aria-label="關閉">✕</button>
+
+  <div class="inner">
     <img class="avatar" src="/images/cook.jpg" alt="酷可" />
-    <div class="text">
-      <p>做遊戲，也做讓別人能做遊戲的東西。</p>
-      <p>從 2021 年到現在，九個遊戲同一個世界、兩代視覺小說引擎、三個編輯器。
-        題材換得很開，但底下都是 2D、TypeScript、自己寫的系統。</p>
+    <h2>酷可 <span class="latin">cook</span></h2>
+    <p class="one">做遊戲，也做讓別人能做遊戲的東西。</p>
+
+    <div class="lines">
+      <p>從 2021 年到現在，九個遊戲同一個世界、兩代視覺小說引擎、三個編輯器。</p>
+      <p>題材換得很開，但底下都是 2D、TypeScript、自己寫的系統。</p>
       <p>也畫圖。</p>
-      <ul class="contact">
-        {links.map((l) => (
-          <li><a href={l.url} target="_blank" rel="noopener">{l.name}</a></li>
-        ))}
-        <li><a href="mailto:b43096022@gmail.com">b43096022@gmail.com</a></li>
-      </ul>
     </div>
+
+    <nav class="contact">
+      {links.map((l) => (
+        <a href={l.url} target="_blank" rel="noopener">{l.name}</a>
+      ))}
+      <a href="mailto:b43096022@gmail.com">b43096022@gmail.com</a>
+    </nav>
   </div>
-</Panel>
+</div>
 
 <style>
   .about {
+    position: fixed;
+    inset: 0;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1.5rem;
+    background: rgba(4, 3, 6, 0.9);
+    overflow-y: auto;
+    scrollbar-width: none;
+  }
+  .about[hidden] {
+    display: none;
+  }
+  .about::-webkit-scrollbar {
+    display: none;
+  }
+  .about.opening {
+    animation: aboutIn 200ms ease-out;
+  }
+  @keyframes aboutIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .quit {
+    position: absolute;
+    top: 1.4rem;
+    right: 1.6rem;
+    width: 32px;
+    height: 32px;
+    border: 0;
+    background: #4a3350;
+    color: #f0c37d;
+    font-size: 0.9rem;
+    cursor: pointer;
+    box-shadow:
+      inset -4px -4px 0 0 #2a1c30,
+      inset 4px 4px 0 0 #6a4c74;
+  }
+  .quit:hover {
+    background: #e8b463;
+    color: #1b1620;
+  }
+
+  .inner {
     display: flex;
     flex-direction: column;
-    gap: 1.2rem;
+    align-items: center;
+    text-align: center;
+    max-width: 32rem;
   }
+
   .avatar {
-    flex: 0 0 auto;
-    width: 104px;
-    height: 104px;
+    width: 148px;
+    height: 148px;
     object-fit: cover;
-    box-shadow:
-      inset -4px -4px 0 0 rgba(0, 0, 0, 0.5),
-      inset 4px 4px 0 0 rgba(107, 79, 42, 0.7);
+    border-radius: 50%;
+    border: 3px solid #e8b463;
+    box-shadow: 0 0 0 8px rgba(232, 180, 99, 0.12);
   }
-  .text p {
-    margin: 0 0 0.9rem;
+
+  h2 {
+    margin: 1.5rem 0 0;
+    font-size: 1.9rem;
+    font-weight: 900;
+    letter-spacing: 0.06em;
+    color: #f0c37d;
+  }
+  .latin {
+    font-weight: 400;
+    opacity: 0.8;
+  }
+  .one {
+    margin: 0.5rem 0 0;
     font-size: 0.95rem;
-    line-height: 1.8;
-    color: rgba(255, 255, 255, 0.82);
+    color: rgba(255, 255, 255, 0.8);
   }
+
+  .lines {
+    margin-top: 1.8rem;
+    padding-top: 1.6rem;
+    border-top: 1px solid rgba(232, 180, 99, 0.22);
+  }
+  .lines p {
+    margin: 0 0 0.7rem;
+    font-size: 0.9rem;
+    line-height: 1.9;
+    color: rgba(255, 255, 255, 0.7);
+  }
+  .lines p:last-child {
+    margin-bottom: 0;
+  }
+
   .contact {
-    margin: 1.4rem 0 0;
-    padding: 0;
-    list-style: none;
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem 1.1rem;
+    justify-content: center;
+    gap: 0.6rem 1.3rem;
+    margin-top: 2rem;
   }
   .contact a {
     font-size: 0.82rem;
     color: #e8b463;
     text-decoration: none;
-    border-bottom: 1px solid rgba(232, 180, 99, 0.35);
-    padding-bottom: 1px;
+    border-bottom: 1px solid rgba(232, 180, 99, 0.3);
+    padding-bottom: 2px;
     transition: border-color 140ms;
   }
   .contact a:hover {
     border-color: #e8b463;
   }
 
-  @media (max-width: 640px) {
-    .about {
-      flex-direction: column;
-      gap: 1.2rem;
+  @media (max-width: 600px) {
+    .avatar {
+      width: 112px;
+      height: 112px;
+    }
+    h2 {
+      font-size: 1.5rem;
+    }
+    .lines {
+      margin-top: 1.4rem;
+      padding-top: 1.2rem;
     }
   }
 </style>
