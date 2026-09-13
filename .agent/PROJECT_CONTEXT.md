@@ -1,11 +1,8 @@
 # 專案狀態
 
-- 2026-08-11:首頁骨架完成,用戶對方向表示滿意(尤其畫廊)。
-- 概念:偵探證物板——作品是圖釘釘上的照片、金線牽連、點擊攤開紙張介紹(仿
-  CookTWGame PaperDialog 動畫),GO 才前往。視覺:暗底 #0c0c0e + 金 #e8b463。
-- 已完成:hero(酷可 cook + 頭像)、10 個遊戲作品上板(連結全數填妥)、紙張介紹視窗
-  (支援 YouTube 影片)、「文」「磚」文件卡區塊、精選 10 張的拖曳膠卷帶畫廊。
-- 2026-08-12:程式碼拆分為 data/site.ts + components/(Hero、Board、DocSection、Gallery)。
+- 2026-09-13:改造成遊戲外殼(規格見 features/game_shell.md)。原本的偵探證物板、
+  紙張視窗、長頁捲動全部移除,像素世界升格為常駐主選單背景,分頁蓋在上面。
+  Fabula 暫時下架(Work.hidden)。程式碼在 components/shell/ 與 scripts/shell.ts。
 - 正式網域 cook1470.com(2026-08-11 購於 Cloudflare Registrar):
   cook1470.com / www → personal-site 專案;phantasia.cook1470.com → phantasia 專案(視覺小說編輯器,
   由 phantasia-engine 的 Claude 出靜態包、經 bridge 協作部署);play.cook1470.com → phantasia-demo 專案(遊戲 demo)。

@@ -1,0 +1,85 @@
+---
+// 文件清單分頁(文章 / MC 地圖共用)。
+import Panel from './Panel.astro';
+import type { Doc } from '../../data/site';
+
+interface Props {
+  id: string;
+  title: string;
+  sub: string;
+  docs: Doc[];
+}
+const { id, title, sub, docs } = Astro.props;
+---
+
+<Panel id={id} title={title} sub={sub}>
+  <ul class="list">
+    {docs.map((d) => (
+      <li>
+        <a href={d.link} target="_blank" rel="noopener">
+          <span class="row-meta">
+            <span class="year">{d.year}</span>
+            <span class="tag">{d.tag}</span>
+          </span>
+          <span class="row-name">{d.name}</span>
+          <span class="row-desc">{d.desc}</span>        </a>
+      </li>
+    ))}
+  </ul>
+</Panel>
+
+<style>
+  .list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-width: 44rem;
+  }
+  .list a {
+    position: relative;
+    display: grid;
+    grid-template-areas:
+      'meta'
+      'name'
+      'desc';
+    gap: 0.15rem 1rem;
+    align-items: center;
+    padding: 0.8rem 1rem;
+    background: #241d2a;
+    text-decoration: none;
+    box-shadow:
+      inset -4px -4px 0 0 #140f18,
+      inset 4px 4px 0 0 #3d3146;
+    transition: background 100ms, transform 100ms;
+  }
+  .list a:hover {
+    background: #3a2c1e;
+    transform: translateX(5px);
+    box-shadow:
+      inset -4px -4px 0 0 #1c1410,
+      inset 4px 4px 0 0 #6b4f2a;
+  }
+  .row-meta {
+    grid-area: meta;
+    display: flex;
+    gap: 0.6rem;
+    font-family: ui-monospace, monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+    color: rgba(255, 255, 255, 0.42);
+  }
+  .row-name {
+    grid-area: name;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #f0c37d;
+  }
+  .row-desc {
+    grid-area: desc;
+    font-size: 0.84rem;
+    color: rgba(255, 255, 255, 0.72);
+  }
+</style>

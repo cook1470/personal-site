@@ -1,8 +1,11 @@
 ---
-import Hero from '../components/Hero.astro';
-import Board from '../components/Board.astro';
-import DocSection from '../components/DocSection.astro';
-import Gallery from '../components/Gallery.astro';
+// 遊戲外殼：一個畫面，像素世界常駐，分頁覆蓋在上。規格見 .agent/features/game_shell.md
+import PixelWorld from '../components/shell/PixelWorld.astro';
+import MainMenu from '../components/shell/MainMenu.astro';
+import WorksPanel from '../components/shell/WorksPanel.astro';
+import ArtPanel from '../components/shell/ArtPanel.astro';
+import DocsPanel from '../components/shell/DocsPanel.astro';
+import AboutPanel from '../components/shell/AboutPanel.astro';
 import { articles, mcMaps } from '../data/site';
 ---
 
@@ -14,109 +17,49 @@ import { articles, mcMaps } from '../data/site';
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="apple-touch-icon" href="/favicon-180.png" />
     <title>酷可 cook — 遊戲開發與繪畫</title>
-    <meta name="description" content="酷可(cook)的作品檔案庫:遊戲、引擎、工具與畫。" />
+    <meta name="description" content="酷可(cook)的作品檔案庫：遊戲、引擎、工具與畫。" />
   </head>
   <body>
-    <canvas id="bg"></canvas>
+    <PixelWorld />
+    <MainMenu />
 
-    <Hero />
+    <WorksPanel />
+    <ArtPanel />
+    <DocsPanel id="docs" title="文" sub="ARTICLES" docs={articles} />
+    <DocsPanel id="maps" title="磚" sub="MINECRAFT" docs={mcMaps} />
+    <AboutPanel />
 
-    <main>
-      <Board />
-      <DocSection title="文" note="寫過的教學系列,點了去 iThome 看。" items={articles} />
-      <DocSection title="磚" note="高中時期做的 Minecraft 地圖,收藏在巴哈創作區。" items={mcMaps} />
-      <Gallery />
-      <footer>
-        <p>合作、回報或只是想聊聊 — <a href="mailto:b43096022@gmail.com">b43096022@gmail.com</a></p>
-        <p>© 2026 酷可 cook</p>
-      </footer>
-    </main>
+    <script src="../scripts/shell.ts"></script>
   </body>
 </html>
 
-<style>
-  :global(html) {
+<style is:global>
+  * {
+    box-sizing: border-box;
+  }
+  html,
+  body {
+    height: 100%;
+    overflow: hidden;
+    margin: 0;
     background: #0c0c0e;
   }
-  :global(body) {
-    margin: 0;
-    color: #d6d3cd;
-    font-family: 'Noto Sans TC', 'Microsoft JhengHei', system-ui, sans-serif;
-    line-height: 1.7;
+  body {
+    font-family: 'Noto Sans TC', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    color: #e8e4dc;
     -webkit-font-smoothing: antialiased;
   }
-  #bg {
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
+  ::selection {
+    background: #e8b463;
+    color: #14100a;
   }
-  main {
-    position: relative;
-    z-index: 1;
-    padding: clamp(3rem, 8vh, 6rem) clamp(1.25rem, 4vw, 4rem) 0;
-  }
-  footer {
-    padding: 2rem 0 2.5rem;
-    color: #55524b;
-    font-size: 0.8rem;
-  }
-  footer p {
-    margin: 0.2rem 0;
-  }
-  footer a {
-    color: #8a7a5e;
-    text-decoration: none;
-    border-bottom: 1px solid #3a3325;
-  }
-  footer a:hover {
-    color: #e8b463;
-    border-bottom-color: #e8b463;
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-delay: 0ms !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 </style>
-
-<script>
-  // 背景:地底的金色微粒,克制不搶主體
-  const canvas = document.getElementById('bg') as HTMLCanvasElement;
-  const ctx = canvas.getContext('2d')!;
-  let w = 0;
-  let h = 0;
-
-  type Mote = { x: number; y: number; r: number; vy: number; a: number };
-  let motes: Mote[] = [];
-
-  function resize() {
-    w = canvas.width = window.innerWidth * devicePixelRatio;
-    h = canvas.height = window.innerHeight * devicePixelRatio;
-    canvas.style.width = '100%';
-    canvas.style.height = '100%';
-    const count = Math.min(40, Math.floor(window.innerWidth / 30));
-    motes = Array.from({ length: count }, () => ({
-      x: Math.random() * w,
-      y: Math.random() * h,
-      r: (Math.random() * 1.2 + 0.4) * devicePixelRatio,
-      vy: (Math.random() * 0.15 + 0.05) * devicePixelRatio,
-      a: Math.random() * 0.35 + 0.1,
-    }));
-  }
-
-  function tick() {
-    ctx.clearRect(0, 0, w, h);
-    for (const m of motes) {
-      m.y -= m.vy;
-      if (m.y < -4) {
-        m.y = h + 4;
-        m.x = Math.random() * w;
-      }
-      ctx.beginPath();
-      ctx.arc(m.x, m.y, m.r, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(232, 180, 99, ${m.a})`;
-      ctx.fill();
-    }
-    requestAnimationFrame(tick);
-  }
-
-  resize();
-  window.addEventListener('resize', resize);
-  requestAnimationFrame(tick);
-</script>

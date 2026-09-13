@@ -1,0 +1,177 @@
+---
+// 主畫面：標題 + 選單按鈕。疊在像素世界上，不擋地面的小人。
+import { links } from '../../data/site';
+
+const items = [
+  { id: 'works', label: '作品', sub: '遊戲與工具' },
+  { id: 'art', label: '繪圖', sub: 'illustration' },
+  { id: 'docs', label: '文', sub: '寫過的東西' },
+  { id: 'maps', label: '磚', sub: 'Minecraft' },
+  { id: 'about', label: '關於', sub: 'cook' },
+];
+---
+
+<div id="menu" class="menu">
+  <div class="title-block">
+    <p class="kicker">GAME DEV / ILLUSTRATION</p>
+    <h1 class="title">酷可 <span class="latin">cook</span></h1>
+    <p class="tagline">做遊戲，也做讓別人能做遊戲的東西。</p>
+  </div>
+
+  <nav class="items">
+    {items.map((it, i) => (
+      <button class="item" data-panel={it.id}>
+        <span class="key">{i + 1}</span>
+        <span class="label">{it.label}</span>
+        <span class="sub">{it.sub}</span>
+      </button>
+    ))}
+  </nav>
+
+  <nav class="social">
+    {links.map((l) => <a href={l.url} target="_blank" rel="noopener">{l.name}</a>)}
+  </nav>
+</div>
+
+<style>
+  .menu {
+    position: fixed;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 8vw;
+    pointer-events: none;
+  }
+  .menu > * {
+    pointer-events: auto;
+  }
+
+  /* 主畫面退場：選單整體淡出並往左讓開，比分頁進場略快 */
+  .menu.away {
+    opacity: 0;
+    transform: translateX(-24px);
+    pointer-events: none;
+    transition: opacity 120ms ease-in, transform 120ms ease-in;
+  }
+  .menu.back {
+    transition: opacity 150ms ease-out, transform 150ms ease-out;
+  }
+
+  .title-block {
+    margin-bottom: 2.5rem;
+  }
+  .kicker {
+    margin: 0 0 0.4rem;
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    color: #31567f;
+  }
+  .title {
+    margin: 0;
+    font-size: clamp(2.6rem, 8vw, 4.2rem);
+    font-weight: 700;
+    line-height: 1;
+    color: #1d3a5f;
+    text-shadow: 3px 3px 0 rgba(255, 255, 255, 0.55);
+  }
+  .title .latin {
+    color: #b07a2a;
+    font-weight: 400;
+  }
+  .tagline {
+    margin: 0.9rem 0 0;
+    font-size: 0.95rem;
+    color: #31567f;
+  }
+
+  .items {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    align-items: flex-start;
+  }
+  .item {
+    display: flex;
+    align-items: baseline;
+    gap: 0.7rem;
+    padding: 0.4rem 1.2rem 0.45rem 0.8rem;
+    border: 0;
+    background: #2b2030;
+    cursor: pointer;
+    font: inherit;
+    color: #f0c37d;
+    box-shadow:
+      inset -4px -4px 0 0 #170f1c,
+      inset 4px 4px 0 0 #453552;
+    transition: background 100ms, color 100ms, transform 100ms;
+  }
+  .item:hover,
+  .item:focus-visible {
+    background: #f0c37d;
+    color: #1a1206;
+    transform: translateX(6px);
+    outline: none;
+    box-shadow:
+      inset -4px -4px 0 0 #a8763c,
+      inset 4px 4px 0 0 #f8e0b0;
+  }
+  .item:active {
+    transform: translateX(2px);
+    box-shadow:
+      inset 4px 4px 0 0 #a8763c,
+      inset -4px -4px 0 0 #f8e0b0;
+  }
+  .item .key {
+    font-family: ui-monospace, monospace;
+    font-size: 0.7rem;
+    opacity: 0.55;
+  }
+  .item .label {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+  }
+  .item .sub {
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    opacity: 0.6;
+  }
+
+  .social {
+    position: absolute;
+    left: 8vw;
+    bottom: 8vh;
+    display: flex;
+    gap: 1.1rem;
+    flex-wrap: wrap;
+  }
+  .social a {
+    font-size: 0.78rem;
+    color: #1d3a5f;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(29, 58, 95, 0.4);
+    padding-bottom: 1px;
+    transition: color 140ms, border-color 140ms;
+  }
+  .social a:hover {
+    color: #b07a2a;
+    border-color: #b07a2a;
+  }
+
+  @media (max-width: 640px) {
+    .menu {
+      padding: 0 6vw;
+      justify-content: flex-start;
+      padding-top: 12vh;
+    }
+    .title-block {
+      margin-bottom: 1.6rem;
+    }
+    .social {
+      left: 6vw;
+      bottom: 4vh;
+    }
+  }
+</style>
