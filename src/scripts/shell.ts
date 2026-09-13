@@ -1,9 +1,10 @@
-// 分頁切換：主選單 ↔ 面板 ↔ 作品長條。鍵盤與滑鼠等價。
+// 分頁切換：主選單 ↔ 面板 ↔ 作品清單。鍵盤與滑鼠等價。
 const PANEL_IDS = ['works', 'art', 'docs', 'maps', 'about'];
 
 export const Shell = {
   menu: null as HTMLElement | null,
   current: null as string | null,
+  picked: 0,
 
   init() {
     this.menu = document.getElementById('menu');
@@ -14,18 +15,9 @@ export const Shell = {
     document.querySelectorAll<HTMLButtonElement>('[data-close]').forEach((btn) => {
       btn.addEventListener('click', () => this.close());
     });
-    document.querySelectorAll<HTMLElement>('[data-work]').forEach((strip) => {
-      strip.addEventListener('click', (e) => {
-        // 條子裡的連結照常運作，不順手把條子收起來
-        if ((e.target as HTMLElement).closest('a')) return;
-        this.toggleStrip(strip);
-      });
-      strip.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          this.toggleStrip(strip);
-        }
-      });
+    document.querySelectorAll<HTMLElement>('[data-work]').forEach((row, i) => {
+      row.addEventListener('click', () => this.pick(i));
+      row.addEventListener('mouseenter', () => this.pick(i));
     });
     // 點面板外面的空白處也關閉
     document.querySelectorAll<HTMLElement>('[data-panel-id]').forEach((overlay) => {
@@ -39,20 +31,16 @@ export const Shell = {
 
   onKey(e: KeyboardEvent) {
     if (e.key === 'Escape') {
-      const open = this.openStripEl();
-      if (open) open.classList.remove('open');
-      else this.close();
+      this.close();
       return;
     }
-    // 作品長條：左右鍵換條
+    // 作品清單：上下鍵選曲
     if (this.current === 'works') {
-      const dir = { ArrowLeft: -1, ArrowRight: 1 }[e.key];
+      const dir = { ArrowUp: -1, ArrowDown: 1 }[e.key];
       if (dir !== undefined) {
         e.preventDefault();
-        const strips = this.strips();
-        const now = strips.indexOf(this.openStripEl()!);
-        const next = now < 0 ? 0 : Math.min(strips.length - 1, Math.max(0, now + dir));
-        this.openStrip(strips[next]);
+        const last = this.rows().length - 1;
+        this.pick(Math.min(last, Math.max(0, this.picked + dir)));
         return;
       }
     }
@@ -79,13 +67,14 @@ export const Shell = {
     panel.classList.remove('opening');
     void panel.offsetWidth;
     panel.classList.add('opening');
+    // 隱藏時量不到位置，開啟後才能把清單捲到定位
+    if (id === 'works') this.pick(this.picked);
   },
 
   close() {
     // 以畫面上實際開著的面板為準，不信任 current：狀態一旦不同步就再也關不掉
     const panel = document.querySelector<HTMLElement>('[data-panel-id]:not([hidden])');
     this.current = null;
-    this.openStripEl()?.classList.remove('open');
     if (!panel) return;
     // 關閉不做退場動畫，直接收掉
     panel.hidden = true;
@@ -94,22 +83,23 @@ export const Shell = {
     this.menu?.classList.remove('away');
   },
 
-  strips() {
+  rows() {
     return Array.from(document.querySelectorAll<HTMLElement>('[data-work]'));
   },
 
-  openStripEl() {
-    return document.querySelector<HTMLElement>('[data-work].open');
-  },
-
-  openStrip(strip: HTMLElement) {
-    this.strips().forEach((s) => s.classList.toggle('open', s === strip));
-  },
-
-  toggleStrip(strip: HTMLElement) {
-    const wasOpen = strip.classList.contains('open');
-    this.strips().forEach((s) => s.classList.remove('open'));
-    if (!wasOpen) strip.classList.add('open');
+  pick(i: number) {
+    this.picked = i;
+    const rows = this.rows();
+    rows.forEach((r, n) => r.classList.toggle('on', n === i));
+    document.querySelectorAll<HTMLElement>('[data-view]').forEach((v, n) => {
+      v.hidden = n !== i;
+    });
+    // 清單跟著捲，選中的那列固定在中間
+    const rail = document.querySelector<HTMLElement>('[data-rail]');
+    const row = rows[i];
+    if (rail && row) {
+      rail.style.transform = `translateY(${-(row.offsetTop + row.offsetHeight / 2)}px)`;
+    }
   },
 };
 
