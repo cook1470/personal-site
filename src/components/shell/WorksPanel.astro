@@ -128,7 +128,7 @@ import { pinned } from '../../data/site';
     scrollbar-width: none;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 1.1rem;
+    gap: 1.6rem 1.5rem;
     align-content: start;
     padding-bottom: 0.5rem;
   }
@@ -136,10 +136,9 @@ import { pinned } from '../../data/site';
     display: none;
   }
 
-  /* 橫式：縮圖靠左，文字在右。縮圖不裁切又不留大片空白 */
   .card {
     display: flex;
-    align-items: stretch;
+    flex-direction: column;
     padding: 0;
     border: 0;
     background: #201a26;
@@ -173,8 +172,7 @@ import { pinned } from '../../data/site';
     display: flex;
     align-items: center;
     justify-content: center;
-    flex: 0 0 auto;
-    width: 168px;
+    height: 104px;
     padding: 8px;
     background: #191420;
     overflow: hidden;
@@ -198,11 +196,12 @@ import { pinned } from '../../data/site';
     font-size: 0.9rem;
     color: rgba(232, 180, 99, 0.4);
   }
+  /* 貼齊角落會被卡片的內陰影邊框吃掉一角，往內縮 */
   .flag {
     position: absolute;
-    left: 0;
-    top: 0;
-    padding: 0.2rem 0.6rem;
+    left: 6px;
+    top: 6px;
+    padding: 0.18rem 0.5rem;
     background: #e8b463;
     color: #1b1206;
     font-family: ui-monospace, monospace;
@@ -211,13 +210,10 @@ import { pinned } from '../../data/site';
   }
 
   .body {
-    flex: 1 1 auto;
-    min-width: 0;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    gap: 0.22rem;
-    padding: 0.8rem 1rem;
+    gap: 0.2rem;
+    padding: 0.7rem 0.9rem 0.85rem;
   }
   .c-name {
     font-size: 1rem;
