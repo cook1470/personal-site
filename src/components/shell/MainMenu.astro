@@ -65,33 +65,25 @@ const items = [
   .kicker {
     margin: 0 0 0.4rem;
     font-size: 0.7rem;
-    letter-spacing: 0.28em;
-    color: #f4e6c8;
-    -webkit-text-stroke: 3px #2d1f14;
-    paint-order: stroke fill;
+    letter-spacing: 0.25em;
+    color: #31567f;
   }
   .title {
     margin: 0;
-    font-family: 'Noto Serif TC', 'Source Han Serif TW', serif;
-    font-size: clamp(2.8rem, 7vw, 4.4rem);
-    font-weight: 900;
+    font-size: clamp(2.6rem, 8vw, 4.2rem);
+    font-weight: 700;
     line-height: 1;
-    background: linear-gradient(180deg, #fdf3ae 0%, #f6b853 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    -webkit-text-stroke: 6px #5e1042;
-    paint-order: stroke fill;
+    color: #1d3a5f;
+    text-shadow: 3px 3px 0 rgba(255, 255, 255, 0.55);
   }
   .title .latin {
+    color: #b07a2a;
     font-weight: 400;
   }
   .tagline {
     margin: 0.9rem 0 0;
     font-size: 0.95rem;
-    color: #fff;
-    -webkit-text-stroke: 4px #2d1f14;
-    paint-order: stroke fill;
+    color: #31567f;
   }
 
   .items {
@@ -126,7 +118,6 @@ const items = [
     opacity: 0.55;
   }
   .item .label {
-    font-family: 'Noto Serif TC', serif;
     font-size: 1.5rem;
     font-weight: 700;
     letter-spacing: 0.08em;
@@ -147,17 +138,15 @@ const items = [
   }
   .social a {
     font-size: 0.78rem;
-    color: #fff;
+    color: #1d3a5f;
     text-decoration: none;
-    -webkit-text-stroke: 3px #2d1f14;
-    paint-order: stroke fill;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.35);
+    border-bottom: 1px solid rgba(29, 58, 95, 0.4);
     padding-bottom: 1px;
     transition: color 140ms, border-color 140ms;
   }
   .social a:hover {
-    color: #f0c37d;
-    border-color: #f0c37d;
+    color: #b07a2a;
+    border-color: #b07a2a;
   }
 
   @media (max-width: 640px) {

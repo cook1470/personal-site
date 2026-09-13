@@ -4,7 +4,7 @@ import Panel from './Panel.astro';
 import { art, PIXIV_HOME } from '../../data/site';
 ---
 
-<Panel id="art" title="繪圖" sub="ILLUSTRATION">
+<Panel id="art" title="繪圖" sub="ILLUSTRATION" size="lg">
   <div class="wall">
     {art.map((a) => (
       <a class="piece" href={`https://www.pixiv.net/artworks/${a.id}`} target="_blank" rel="noopener">

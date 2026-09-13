@@ -4,7 +4,7 @@ import Panel from './Panel.astro';
 import { links } from '../../data/site';
 ---
 
-<Panel id="about" title="關於" sub="COOK">
+<Panel id="about" title="關於" sub="COOK" size="sm">
   <div class="about">
     <img class="avatar" src="/images/cook.jpg" alt="酷可" />
     <div class="text">
@@ -25,14 +25,13 @@ import { links } from '../../data/site';
 <style>
   .about {
     display: flex;
-    gap: 1.8rem;
-    align-items: flex-start;
-    max-width: 44rem;
+    flex-direction: column;
+    gap: 1.2rem;
   }
   .avatar {
     flex: 0 0 auto;
-    width: 132px;
-    height: 132px;
+    width: 104px;
+    height: 104px;
     object-fit: cover;
     border: 2px solid rgba(232, 180, 99, 0.4);
     clip-path: polygon(0 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%);

@@ -1,56 +1,83 @@
 ---
-// 分頁面板外框。半透明留邊,底下的像素世界仍看得見——不切斷上下文。
+// 分頁面板外框。尺寸依內容給,不一律滿版;點面板外面也能關。
 interface Props {
   id: string;
   title: string;
   sub?: string;
+  size?: 'sm' | 'md' | 'lg';
 }
-const { id, title, sub } = Astro.props;
+const { id, title, sub, size = 'md' } = Astro.props;
 ---
 
-<section class="panel" id={`panel-${id}`} data-panel-id={id} hidden>
-  <header class="head">
-    <h2>{title}</h2>
-    {sub && <span class="sub">{sub}</span>}
-    <button class="close" data-close aria-label="關閉">✕ <span class="esc">ESC</span></button>
-  </header>
-  <div class="body">
-    <slot />
-  </div>
-</section>
+<div class="overlay" id={`panel-${id}`} data-panel-id={id} hidden>
+  <section class={`panel ${size}`}>
+    <header class="head">
+      <h2>{title}</h2>
+      {sub && <span class="sub">{sub}</span>}
+      <button class="close" data-close aria-label="關閉">✕ <span class="esc">ESC</span></button>
+    </header>
+    <div class="body">
+      <slot />
+    </div>
+  </section>
+</div>
 
 <style>
-  .panel {
+  .overlay {
     position: fixed;
-    inset: 6vh 6vw;
+    inset: 0;
     z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4vh 4vw;
+    background: rgba(0, 0, 0, 0.28);
+  }
+  /* hidden 屬性會輸給 display:flex,必須明寫(見 PITFALLS) */
+  .overlay[hidden] {
+    display: none;
+  }
+  .overlay.opening {
+    animation: fadeIn 150ms ease-out;
+  }
+  .overlay.closing {
+    animation: fadeOut 120ms ease-in forwards;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+  }
+
+  .panel {
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    background: linear-gradient(180deg, rgba(14, 13, 16, 0.9) 0%, rgba(10, 9, 12, 0.93) 100%);
+    max-height: 88vh;
+    background: linear-gradient(180deg, rgba(14, 13, 16, 0.92) 0%, rgba(10, 9, 12, 0.95) 100%);
     border: 2px solid rgba(232, 180, 99, 0.3);
     box-shadow: 0 18px 60px rgba(0, 0, 0, 0.75);
     clip-path: polygon(0 0, 100% 0, 100% calc(100% - 18px), calc(100% - 18px) 100%, 0 100%);
   }
-  /* hidden 屬性會輸給這裡的 display:flex,必須明寫(見 PITFALLS) */
-  .panel[hidden] {
-    display: none;
+  /* 尺寸依內容給:關於只有幾行字,不該跟作品格子一樣大 */
+  .panel.sm {
+    width: min(30rem, 100%);
   }
-
-  .panel.opening {
+  .panel.md {
+    width: min(48rem, 100%);
+  }
+  .panel.lg {
+    width: min(72rem, 100%);
+  }
+  .overlay.opening .panel {
     animation: panelIn 150ms cubic-bezier(0.2, 0.9, 0.3, 1.1);
-  }
-  /* 退場比進場快:關閉要俐落,不能讓人等 */
-  .panel.closing {
-    animation: panelOut 120ms ease-in forwards;
   }
   @keyframes panelIn {
     from { opacity: 0; transform: translateY(14px) scale(0.985); }
     to { opacity: 1; transform: none; }
-  }
-  @keyframes panelOut {
-    from { opacity: 1; transform: none; }
-    to { opacity: 0; transform: translateY(8px) scale(0.99); }
   }
 
   .head {
@@ -64,7 +91,6 @@ const { id, title, sub } = Astro.props;
   }
   h2 {
     margin: 0;
-    font-family: 'Noto Serif TC', serif;
     font-size: 1.6rem;
     font-weight: 900;
     letter-spacing: 0.12em;
@@ -114,8 +140,11 @@ const { id, title, sub } = Astro.props;
   }
 
   @media (max-width: 640px) {
+    .overlay {
+      padding: 3vh 3vw;
+    }
     .panel {
-      inset: 3vh 3vw;
+      max-height: 92vh;
     }
     .head {
       padding: 0.7rem 1rem;

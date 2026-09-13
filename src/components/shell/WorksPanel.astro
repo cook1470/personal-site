@@ -4,7 +4,7 @@ import Panel from './Panel.astro';
 import { pinned } from '../../data/site';
 ---
 
-<Panel id="works" title="作品" sub="WORKS">
+<Panel id="works" title="作品" sub="WORKS" size="lg">
   <div class="grid" data-works-grid>
     {pinned.map((w, i) => (
       <button class="cell" data-work={w.id}>
@@ -100,7 +100,6 @@ import { pinned } from '../../data/site';
     color: rgba(255, 255, 255, 0.42);
   }
   .name {
-    font-family: 'Noto Serif TC', serif;
     font-size: 1.12rem;
     font-weight: 700;
     color: #f0c37d;
@@ -154,7 +153,6 @@ import { pinned } from '../../data/site';
   }
   .detail h3 {
     margin: 0 0 0.5rem;
-    font-family: 'Noto Serif TC', serif;
     font-size: 1.9rem;
     font-weight: 900;
     color: #f0c37d;

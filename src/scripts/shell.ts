@@ -20,6 +20,12 @@ export const Shell = {
     document.querySelectorAll<HTMLButtonElement>('[data-back]').forEach((btn) => {
       btn.addEventListener('click', () => this.closeWork());
     });
+    // 點面板外面的空白處也關閉
+    document.querySelectorAll<HTMLElement>('[data-panel-id]').forEach((overlay) => {
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) this.close();
+      });
+    });
 
     window.addEventListener('keydown', (e) => this.onKey(e));
   },
