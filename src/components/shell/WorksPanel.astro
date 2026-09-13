@@ -1,22 +1,32 @@
 ---
-// 作品分頁：格子陳列，點開詳情。一頁裝得下，不出捲軸。
+// 作品分頁：遊戲合集式的格子陣。一次只選中一格，資訊顯示在格子區外面，
+// 方向鍵可走、Enter 開啟。不是 card grid（那是網頁的長相）。
 import Panel from './Panel.astro';
 import { pinned } from '../../data/site';
 ---
 
 <Panel id="works" title="作品" sub="WORKS" size="lg">
-  <div class="grid" data-works-grid>
-    {pinned.map((w) => (
-      <button class="cell" data-work={w.id}>
-        <span class="shot">
-          {w.img ? <img src={w.img} alt="" loading="lazy" /> : <span class="noshot">{w.name.slice(0, 1)}</span>}
-        </span>
-        <span class="cell-in">
-          <span class="name">{w.name}</span>
-          <span class="meta">{w.year} · {w.tag}</span>
-        </span>
-      </button>
-    ))}
+  <div class="collection" data-works-grid>
+    <div class="slots">
+      {pinned.map((w, i) => (
+        <button class="slot" data-work={w.id} data-index={i}>
+          {w.img
+            ? <img src={w.img} alt="" loading="lazy" />
+            : <span class="noshot">{w.name.slice(0, 1)}</span>}
+          <span class="cursor"></span>
+        </button>
+      ))}
+    </div>
+
+    <div class="readout">
+      {pinned.map((w, i) => (
+        <div class="line" data-readout={i} hidden={i !== 0}>
+          <span class="r-name">{w.name}</span>
+          <span class="r-meta">{w.year} · {w.tag}{w.status ? ` · ${w.status}` : ''}</span>
+          <span class="r-desc">{w.desc}</span>
+        </div>
+      ))}
+    </div>
   </div>
 
   {pinned.map((w) => (
@@ -46,82 +56,97 @@ import { pinned } from '../../data/site';
 </Panel>
 
 <style>
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 0.7rem;
-  }
-  .grid[hidden] {
-    display: none;
-  }
-  .cell {
+  .collection {
     display: flex;
     flex-direction: column;
+    gap: 1rem;
+  }
+  .collection[hidden] {
+    display: none;
+  }
+
+  .slots {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+  }
+  .slot {
+    position: relative;
+    aspect-ratio: 1;
     padding: 0;
     border: 0;
-    background: #241d2a;
-    color: inherit;
-    font: inherit;
-    text-align: left;
+    background: #16121a;
     cursor: pointer;
     overflow: hidden;
     box-shadow:
-      inset -4px -4px 0 0 #140f18,
-      inset 4px 4px 0 0 #3d3146;
-    transition: background 100ms, transform 100ms;
+      inset -4px -4px 0 0 #0c090e,
+      inset 4px 4px 0 0 #2e2536;
+    transition: transform 100ms;
   }
-  .cell:hover,
-  .cell:focus-visible {
-    background: #3a2c1e;
-    transform: translateY(-4px);
-    outline: none;
-    box-shadow:
-      inset -4px -4px 0 0 #1c1410,
-      inset 4px 4px 0 0 #6b4f2a;
-  }
-  .cell:active {
-    transform: translateY(0);
-    box-shadow:
-      inset 4px 4px 0 0 #1c1410,
-      inset -4px -4px 0 0 #6b4f2a;
-  }
-  .shot {
-    display: block;
-    aspect-ratio: 16 / 10;
-    background: #16141a;
-    overflow: hidden;
-  }
-  .shot img {
+  .slot img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     display: block;
+    filter: saturate(0.5) brightness(0.58);
+    transition: filter 100ms;
   }
   .noshot {
     display: flex;
     align-items: center;
     justify-content: center;
     height: 100%;
-    font-size: 1.6rem;
-    color: rgba(232, 180, 99, 0.35);
+    font-size: 1.8rem;
+    color: rgba(232, 180, 99, 0.3);
   }
-  .cell-in {
-    display: flex;
-    flex-direction: column;
-    gap: 0.15rem;
-    padding: 0.55rem 0.65rem 0.7rem;
+  /* 選取框：只有被選中的格子亮起來，像遊戲選單的游標 */
+  .cursor {
+    position: absolute;
+    inset: 0;
+    box-shadow: inset 0 0 0 4px transparent;
+    pointer-events: none;
   }
-  .name {
-    font-size: 0.92rem;
+  .slot.on img {
+    filter: none;
+  }
+  .slot.on .cursor {
+    box-shadow: inset 0 0 0 4px #e8b463;
+  }
+  .slot.on {
+    transform: translateY(-4px);
+  }
+
+  .readout {
+    padding: 0.75rem 0.9rem;
+    background: #16121a;
+    box-shadow:
+      inset -4px -4px 0 0 #0c090e,
+      inset 4px 4px 0 0 #2e2536;
+  }
+  .line[hidden] {
+    display: none;
+  }
+  .line {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.15rem 0.8rem;
+  }
+  .r-name {
+    font-size: 1.15rem;
     font-weight: 700;
     color: #f0c37d;
-    line-height: 1.3;
   }
-  .meta {
+  .r-meta {
+    align-self: center;
     font-family: ui-monospace, monospace;
-    font-size: 0.6rem;
-    letter-spacing: 0.08em;
-    color: rgba(255, 255, 255, 0.42);
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    color: rgba(255, 255, 255, 0.4);
+  }
+  .r-desc {
+    grid-column: 1 / -1;
+    font-size: 0.88rem;
+    color: rgba(255, 255, 255, 0.8);
   }
 
   .detail[hidden] {
@@ -130,17 +155,13 @@ import { pinned } from '../../data/site';
   .detail {
     display: grid;
     grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
-    gap: 1.6rem;
+    gap: 1.5rem;
     align-items: start;
     animation: detailIn 150ms cubic-bezier(0.2, 0.9, 0.3, 1.1);
   }
   @keyframes detailIn {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: none; }
-  }
-  .media {
-    position: sticky;
-    top: 0;
   }
   .d-shot,
   .video {
@@ -200,7 +221,6 @@ import { pinned } from '../../data/site';
     gap: 0.6rem;
     flex-wrap: wrap;
   }
-  /* 像素風方鈕：硬邊，按下往內沉 */
   .go-btn,
   .back {
     padding: 0.5rem 1.3rem;
@@ -239,8 +259,8 @@ import { pinned } from '../../data/site';
   }
 
   @media (max-width: 900px) {
-    .grid {
-      grid-template-columns: repeat(3, 1fr);
+    .slots {
+      grid-template-columns: repeat(4, 1fr);
     }
     .detail {
       grid-template-columns: 1fr;
@@ -248,8 +268,8 @@ import { pinned } from '../../data/site';
     }
   }
   @media (max-width: 560px) {
-    .grid {
-      grid-template-columns: repeat(2, 1fr);
+    .slots {
+      grid-template-columns: repeat(3, 1fr);
     }
   }
 </style>

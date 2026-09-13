@@ -3,6 +3,7 @@ const PANEL_IDS = ['works', 'art', 'docs', 'maps', 'about'];
 
 export const Shell = {
   menu: null as HTMLElement | null,
+  picked: 0,
   current: null as string | null,
 
   init() {
@@ -16,7 +17,9 @@ export const Shell = {
     });
     document.querySelectorAll<HTMLButtonElement>('[data-work]').forEach((btn) => {
       btn.addEventListener('click', () => this.openWork(btn.dataset.work!));
+      btn.addEventListener('mouseenter', () => this.select(Number(btn.dataset.index)));
     });
+    this.select(0);
     document.querySelectorAll<HTMLButtonElement>('[data-back]').forEach((btn) => {
       btn.addEventListener('click', () => this.closeWork());
     });
@@ -35,6 +38,23 @@ export const Shell = {
       if (this.currentWork()) this.closeWork();
       else this.close();
       return;
+    }
+    // 作品格子陣：方向鍵走格、Enter 開啟
+    if (this.current === 'works' && !this.currentWork()) {
+      const slots = this.slots();
+      if (!slots.length) return;
+      const cols = this.slotCols();
+      const step = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -cols, ArrowDown: cols }[e.key];
+      if (step !== undefined) {
+        e.preventDefault();
+        this.select(Math.min(slots.length - 1, Math.max(0, this.picked + step)));
+        return;
+      }
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        this.openWork(slots[this.picked].dataset.work!);
+        return;
+      }
     }
     // 數字鍵只在主畫面有效，免得在面板裡誤觸換頁
     if (document.querySelector('[data-panel-id]:not([hidden])')) return;
@@ -72,6 +92,25 @@ export const Shell = {
     panel.classList.remove('opening');
     this.menu?.classList.add('back');
     this.menu?.classList.remove('away');
+  },
+
+  slots() {
+    return Array.from(document.querySelectorAll<HTMLButtonElement>('[data-work]'));
+  },
+
+  // 欄數從實際算出的 grid 讀，響應式換欄時方向鍵才不會走錯
+  slotCols() {
+    const grid = document.querySelector('.slots');
+    if (!grid) return 1;
+    return getComputedStyle(grid).gridTemplateColumns.split(' ').length;
+  },
+
+  select(i: number) {
+    this.picked = i;
+    this.slots().forEach((s, n) => s.classList.toggle('on', n === i));
+    document.querySelectorAll<HTMLElement>('[data-readout]').forEach((r, n) => {
+      r.hidden = n !== i;
+    });
   },
 
   currentWork() {
