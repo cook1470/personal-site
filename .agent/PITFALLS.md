@@ -13,6 +13,13 @@
   作品格子 display:grid 沒收起來,詳情長在格子下面)。
   規則:任何會用 `hidden` 切換的元素,設 display 時必須同時寫 `[hidden] { display: none }`。
 
+- 看畫面用 Windows 內建 Edge 截圖，不必裝 playwright：
+  `msedge.exe --headless=new --disable-gpu --hide-scrollbars --force-prefers-reduced-motion
+  --window-size=1600,900 --screenshot=out.png --virtual-time-budget=5000 <url>`
+  `--force-prefers-reduced-motion` 不可省：headless 的虛擬時鐘會把進場動畫凍結在
+  opacity 0 的中間狀態，拍出來像「CSS 完全沒生效」，會誤判成樣式壞掉（已誤判一次）。
+  另外要截 build 後的 `astro preview`，dev server 的 HMR 注入在 headless 下不穩。
+
 - 用 PowerShell Set-Content 改含中文的原始碼會把編碼弄壞成亂碼(2026-08-11 踩過,
   靠 git checkout 救回)。改檔一律用 Write/Edit 工具,shell 只跑指令不碰檔案內容。
 - CG 封面圖:專案未公開時 full_project API 回 400,但發布成品可從
