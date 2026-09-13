@@ -38,9 +38,11 @@ import { pinned } from '../../data/site';
   {pinned.map((w, i) => (
     <article class="sheet" data-detail={i} hidden>
       <div class="big">
-        {w.img
-          ? <img src={w.img} alt={w.name} />
-          : <span class="nothumb big-none">{w.name}</span>}
+        {w.video
+          ? <div class="video" data-video={w.video}></div>
+          : w.img
+            ? <img src={w.img} alt={w.name} />
+            : <span class="nothumb big-none">{w.name}</span>}
       </div>
       <div class="text">
         <p class="d-meta">{w.year} · {w.tag}{w.status ? ` · ${w.status}` : ''}</p>
@@ -278,7 +280,7 @@ import { pinned } from '../../data/site';
     grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
     gap: 1.8rem;
     align-items: center;
-    max-width: 68rem;
+    width: min(68rem, 100%);
     max-height: 88vh;
     padding: 1.6rem;
     background: rgba(24, 20, 30, 0.82);
@@ -299,6 +301,16 @@ import { pinned } from '../../data/site';
   .big-none {
     aspect-ratio: 16 / 9;
     background: #241d2a;
+  }
+  .video {
+    aspect-ratio: 16 / 9;
+    background: #000;
+  }
+  .video :global(iframe) {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
   }
   .d-meta {
     margin: 0 0 0.3rem;

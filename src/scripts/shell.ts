@@ -108,13 +108,29 @@ export const Shell = {
     if (!layer) return;
     document.querySelectorAll<HTMLElement>('[data-detail]').forEach((d, n) => {
       d.hidden = n !== i;
+      if (n === i) this.mountVideo(d);
     });
     layer.hidden = false;
   },
 
   closeDetail() {
     const layer = this.detailLayer();
-    if (layer) layer.hidden = true;
+    if (!layer) return;
+    layer.querySelectorAll<HTMLElement>('[data-video]').forEach((b) => {
+      b.innerHTML = '';
+    });
+    layer.hidden = true;
+  },
+
+  // 開啟才嵌入、關閉就移除，免得影片在背景一直載
+  mountVideo(detail: HTMLElement) {
+    const box = detail.querySelector<HTMLElement>('[data-video]');
+    if (!box || box.querySelector('iframe')) return;
+    const iframe = document.createElement('iframe');
+    iframe.src = `https://www.youtube.com/embed/${box.dataset.video}`;
+    iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; picture-in-picture';
+    iframe.allowFullscreen = true;
+    box.appendChild(iframe);
   },
 };
 
