@@ -133,6 +133,8 @@ const { id, title, sub, size = 'md' } = Astro.props;
 
   .body {
     flex: 1 1 auto;
+    /* min-height:0 才能讓內容跟著縮，否則超出的部分會被裁掉 */
+    min-height: 0;
     overflow: hidden;
     padding: 1.2rem;
   }
