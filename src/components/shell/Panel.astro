@@ -31,7 +31,7 @@ const { id, title, sub, size = 'md' } = Astro.props;
     align-items: center;
     justify-content: center;
     padding: 4vh 4vw;
-    background: rgba(0, 0, 0, 0.28);
+    background: rgba(0, 0, 0, 0.62);
   }
   /* hidden 屬性會輸給 display:flex,必須明寫(見 PITFALLS) */
   .overlay[hidden] {
@@ -40,16 +40,9 @@ const { id, title, sub, size = 'md' } = Astro.props;
   .overlay.opening {
     animation: fadeIn 150ms ease-out;
   }
-  .overlay.closing {
-    animation: fadeOut 120ms ease-in forwards;
-  }
   @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
-  }
-  @keyframes fadeOut {
-    from { opacity: 1; }
-    to { opacity: 0; }
   }
 
   .panel {

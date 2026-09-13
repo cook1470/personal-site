@@ -48,7 +48,7 @@ export const Shell = {
 
   open(id: string) {
     if (this.current === id) return;
-    if (this.current) this.close(true);
+    if (this.current) this.close();
     const panel = this.panelOf(id);
     if (!panel) return;
     this.current = id;
@@ -56,29 +56,20 @@ export const Shell = {
     this.menu?.classList.add('away');
     panel.hidden = false;
     // 強制 reflow,否則同一個面板再開一次時進場動畫不會重播
-    panel.classList.remove('closing', 'opening');
+    panel.classList.remove('opening');
     void panel.offsetWidth;
     panel.classList.add('opening');
   },
 
-  close(silent = false) {
+  close() {
     // 以畫面上實際開著的面板為準,不信任 current:狀態一旦不同步就再也關不掉
     const panel = document.querySelector<HTMLElement>('[data-panel-id]:not([hidden])');
     this.current = null;
     this.closeWork();
     if (!panel) return;
-    if (silent) {
-      panel.hidden = true;
-      panel.classList.remove('opening', 'closing');
-      return;
-    }
-    // 用計時器而非 animationend:子元素的動畫也會冒泡上來,收錯事件就關不掉
+    // 關閉不做退場動畫,直接收掉
+    panel.hidden = true;
     panel.classList.remove('opening');
-    panel.classList.add('closing');
-    window.setTimeout(() => {
-      panel.hidden = true;
-      panel.classList.remove('closing');
-    }, 120);
     this.menu?.classList.add('back');
     this.menu?.classList.remove('away');
   },
