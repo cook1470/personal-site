@@ -22,9 +22,7 @@ const { id, title, sub, docs } = Astro.props;
             <span class="tag">{d.tag}</span>
           </span>
           <span class="row-name">{d.name}</span>
-          <span class="row-desc">{d.desc}</span>
-          <span class="arrow">→</span>
-        </a>
+          <span class="row-desc">{d.desc}</span>        </a>
       </li>
     ))}
   </ul>
@@ -43,11 +41,10 @@ const { id, title, sub, docs } = Astro.props;
   .list a {
     position: relative;
     display: grid;
-    grid-template-columns: 1fr auto;
     grid-template-areas:
-      'meta arrow'
-      'name arrow'
-      'desc arrow';
+      'meta'
+      'name'
+      'desc';
     gap: 0.15rem 1rem;
     align-items: center;
     padding: 0.8rem 1rem;
@@ -80,13 +77,5 @@ const { id, title, sub, docs } = Astro.props;
     grid-area: desc;
     font-size: 0.84rem;
     color: rgba(255, 255, 255, 0.72);
-  }
-  .arrow {
-    grid-area: arrow;
-    color: rgba(232, 180, 99, 0.5);
-    transition: color 140ms, transform 140ms;
-  }
-  .list a:hover .arrow {
-    color: #e8b463;
   }
 </style>

@@ -1,21 +1,19 @@
 ---
-// 作品分頁:格子陳列 → 點開詳情。素材只有縮圖,所以格子主體是文案,截圖退成底圖。
+// 作品分頁:格子陳列,點開詳情。一頁裝得下,不出捲軸。
 import Panel from './Panel.astro';
 import { pinned } from '../../data/site';
 ---
 
 <Panel id="works" title="作品" sub="WORKS" size="lg">
   <div class="grid" data-works-grid>
-    {pinned.map((w, i) => (
+    {pinned.map((w) => (
       <button class="cell" data-work={w.id}>
+        <span class="shot">
+          {w.img ? <img src={w.img} alt="" loading="lazy" /> : <span class="noshot">{w.name.slice(0, 1)}</span>}
+        </span>
         <span class="cell-in">
-          <span class="meta">
-            <span class="year">{w.year}</span>
-            <span class="tag">{w.tag}</span>
-          </span>
           <span class="name">{w.name}</span>
-          <span class="desc">{w.desc}</span>
-          {w.status && <span class="status">{w.status}</span>}
+          <span class="meta">{w.year} · {w.tag}</span>
         </span>
       </button>
     ))}
@@ -23,22 +21,25 @@ import { pinned } from '../../data/site';
 
   {pinned.map((w) => (
     <article class="detail" data-detail={w.id} hidden>
-      <button class="back" data-back>← 返回</button>
-      <p class="d-meta">{w.year} · {w.tag}{w.status ? ` · ${w.status}` : ''}</p>
-      <h3>{w.name}</h3>
-      <p class="d-desc">{w.desc}</p>
-      {w.video && (
-        <div class="video" data-video={w.video}></div>
-      )}
-      {!w.video && w.img && <img class="d-shot" src={w.img} alt={w.name} />}
-      {w.features && (
-        <ul class="features">
-          {w.features.map((f) => <li>{f}</li>)}
-        </ul>
-      )}
-      <div class="go">
-        <a class="go-btn" href={w.link} target="_blank" rel="noopener">前往 →</a>
-        {w.link2 && <a class="go-btn alt" href={w.link2} target="_blank" rel="noopener">{w.link2Label ?? '另一個'} →</a>}
+      <div class="media">
+        {w.video
+          ? <div class="video" data-video={w.video}></div>
+          : w.img && <img class="d-shot" src={w.img} alt={w.name} />}
+      </div>
+      <div class="info">
+        <p class="d-meta">{w.year} · {w.tag}{w.status ? ` · ${w.status}` : ''}</p>
+        <h3>{w.name}</h3>
+        <p class="d-desc">{w.desc}</p>
+        {w.features && (
+          <ul class="features">
+            {w.features.map((f) => <li>{f}</li>)}
+          </ul>
+        )}
+        <div class="actions">
+          <a class="go-btn" href={w.link} target="_blank" rel="noopener">前往</a>
+          {w.link2 && <a class="go-btn alt" href={w.link2} target="_blank" rel="noopener">{w.link2Label ?? '另一個'}</a>}
+          <button class="back" data-back>返回</button>
+        </div>
       </div>
     </article>
   ))}
@@ -47,16 +48,15 @@ import { pinned } from '../../data/site';
 <style>
   .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-    gap: 0.9rem;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.7rem;
   }
   .grid[hidden] {
     display: none;
   }
   .cell {
-    position: relative;
-    display: block;
-    overflow: hidden;
+    display: flex;
+    flex-direction: column;
     padding: 0;
     border: 1px solid rgba(232, 180, 99, 0.22);
     background: rgba(20, 18, 22, 0.6);
@@ -64,100 +64,80 @@ import { pinned } from '../../data/site';
     font: inherit;
     text-align: left;
     cursor: pointer;
-    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%);
+    overflow: hidden;
     transition: border-color 140ms ease-out, transform 140ms ease-out, background 140ms ease-out;
   }
   .cell:hover,
   .cell:focus-visible {
     border-color: #e8b463;
-    background: rgba(36, 30, 20, 0.75);
+    background: rgba(36, 30, 20, 0.8);
     transform: translateY(-3px);
     outline: none;
   }
+  .shot {
+    display: block;
+    aspect-ratio: 16 / 10;
+    background: #16141a;
+    overflow: hidden;
+  }
+  .shot img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .noshot {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    font-size: 1.6rem;
+    color: rgba(232, 180, 99, 0.35);
+  }
   .cell-in {
-    position: relative;
     display: flex;
     flex-direction: column;
-    gap: 0.3rem;
-    padding: 0.95rem 1rem 1.1rem;
-    min-height: 118px;
-  }
-  .meta {
-    display: flex;
-    gap: 0.6rem;
-    font-family: ui-monospace, monospace;
-    font-size: 0.62rem;
-    letter-spacing: 0.12em;
-    color: rgba(255, 255, 255, 0.42);
+    gap: 0.15rem;
+    padding: 0.55rem 0.65rem 0.7rem;
   }
   .name {
-    font-size: 1.12rem;
+    font-size: 0.92rem;
     font-weight: 700;
     color: #f0c37d;
+    line-height: 1.3;
   }
-  .desc {
-    font-size: 0.85rem;
-    color: rgba(255, 255, 255, 0.78);
-    line-height: 1.5;
-  }
-  .status {
-    margin-top: auto;
+  .meta {
     font-family: ui-monospace, monospace;
     font-size: 0.6rem;
-    letter-spacing: 0.1em;
-    color: #8fb98f;
+    letter-spacing: 0.08em;
+    color: rgba(255, 255, 255, 0.42);
   }
 
   .detail[hidden] {
     display: none;
   }
   .detail {
-    max-width: 46rem;
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    gap: 1.6rem;
+    align-items: start;
     animation: detailIn 150ms cubic-bezier(0.2, 0.9, 0.3, 1.1);
   }
   @keyframes detailIn {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: none; }
   }
-  .back {
-    margin-bottom: 1.1rem;
-    padding: 0.3rem 0.8rem;
-    border: 1px solid rgba(232, 180, 99, 0.4);
-    background: transparent;
-    color: #e8b463;
-    font: inherit;
-    font-size: 0.8rem;
-    cursor: pointer;
-    clip-path: polygon(8px 0, 100% 0, 100% 100%, 0 100%);
-    transition: background 140ms, color 140ms;
-  }
-  .back:hover {
-    background: #e8b463;
-    color: #14100a;
-  }
-  .d-meta {
-    margin: 0 0 0.3rem;
-    font-family: ui-monospace, monospace;
-    font-size: 0.66rem;
-    letter-spacing: 0.14em;
-    color: rgba(255, 255, 255, 0.45);
-  }
-  .detail h3 {
-    margin: 0 0 0.5rem;
-    font-size: 1.9rem;
-    font-weight: 900;
-    color: #f0c37d;
-  }
-  .d-desc {
-    margin: 0 0 1.2rem;
-    font-size: 1rem;
-    color: rgba(255, 255, 255, 0.85);
+  .media {
+    position: sticky;
+    top: 0;
   }
   .d-shot,
   .video {
     width: 100%;
-    margin-bottom: 1.2rem;
     border: 1px solid rgba(232, 180, 99, 0.25);
+  }
+  .d-shot {
+    display: block;
   }
   .video {
     aspect-ratio: 16 / 9;
@@ -169,46 +149,85 @@ import { pinned } from '../../data/site';
     border: 0;
     display: block;
   }
+  .d-meta {
+    margin: 0 0 0.3rem;
+    font-family: ui-monospace, monospace;
+    font-size: 0.66rem;
+    letter-spacing: 0.14em;
+    color: rgba(255, 255, 255, 0.45);
+  }
+  .detail h3 {
+    margin: 0 0 0.4rem;
+    font-size: 1.7rem;
+    font-weight: 900;
+    color: #f0c37d;
+  }
+  .d-desc {
+    margin: 0 0 1rem;
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.85);
+  }
   .features {
-    margin: 0 0 1.4rem;
+    margin: 0 0 1.2rem;
     padding: 0;
     list-style: none;
     display: flex;
     flex-direction: column;
-    gap: 0.55rem;
+    gap: 0.45rem;
   }
   .features li {
-    padding-left: 0.95rem;
+    padding-left: 0.85rem;
     border-left: 2px solid rgba(232, 180, 99, 0.45);
-    font-size: 0.9rem;
-    line-height: 1.65;
+    font-size: 0.84rem;
+    line-height: 1.6;
     color: rgba(255, 255, 255, 0.8);
   }
-  .go {
+  .actions {
     display: flex;
-    gap: 0.7rem;
+    gap: 0.6rem;
     flex-wrap: wrap;
   }
-  .go-btn {
-    padding: 0.5rem 1.3rem;
-    background: #e8b463;
-    color: #14100a;
-    font-size: 0.9rem;
+  .go-btn,
+  .back {
+    padding: 0.45rem 1.2rem;
+    font: inherit;
+    font-size: 0.88rem;
     font-weight: 700;
     text-decoration: none;
-    clip-path: polygon(0 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
-    transition: transform 140ms ease-out, background 140ms;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: background 140ms, color 140ms;
+  }
+  .go-btn {
+    background: #e8b463;
+    color: #14100a;
   }
   .go-btn:hover {
-    transform: translateX(4px);
     background: #f4cd8c;
   }
-  .go-btn.alt {
+  .go-btn.alt,
+  .back {
     background: transparent;
-    border: 1px solid rgba(232, 180, 99, 0.5);
+    border-color: rgba(232, 180, 99, 0.5);
     color: #e8b463;
   }
-  .go-btn.alt:hover {
+  .go-btn.alt:hover,
+  .back:hover {
     background: rgba(232, 180, 99, 0.15);
+  }
+
+  @media (max-width: 900px) {
+    .grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .detail {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+  }
+  @media (max-width: 560px) {
+    .grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
   }
 </style>

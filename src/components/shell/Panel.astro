@@ -122,14 +122,8 @@ const { id, title, sub, size = 'md' } = Astro.props;
 
   .body {
     flex: 1 1 auto;
-    overflow-y: auto;
+    overflow: hidden;
     padding: 1.4rem;
-  }
-  .body::-webkit-scrollbar {
-    width: 8px;
-  }
-  .body::-webkit-scrollbar-thumb {
-    background: rgba(232, 180, 99, 0.3);
   }
 
   @media (max-width: 640px) {
