@@ -23,6 +23,8 @@
   它出靜態包放 %LOCALAPPDATA%\claude-bridge\outbox\，我負責 wrangler 部署。
   部署出口只在本專案，不要教對方自己 deploy（避免雙寫）。
   注意 phantasia / phantasia-demo 的 production 分支是 main，不是 master。
+- Mac 端由 Mio 一起開發，clone 在 /Users/cook/agents/_public/projects/personal-site。
+  部署出口只有 Windows 這台（wrangler token 在本機），Mac 端只 push master，不自己 deploy。
 
 ## 目前狀態
 
