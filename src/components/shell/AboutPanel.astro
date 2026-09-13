@@ -3,9 +3,7 @@
 import { links } from '../../data/site';
 ---
 
-<div class="about" id="panel-about" data-panel-id="about" hidden>
-  <button class="quit" data-close aria-label="關閉">✕</button>
-
+<div class="about" id="panel-about" data-panel-id="about" data-close-anywhere hidden>
   <div class="inner">
     <img class="avatar" src="/images/cook.jpg" alt="酷可" />
     <h2>酷可 <span class="latin">cook</span></h2>
@@ -51,26 +49,6 @@ import { links } from '../../data/site';
   @keyframes aboutIn {
     from { opacity: 0; }
     to { opacity: 1; }
-  }
-
-  .quit {
-    position: absolute;
-    top: 1.4rem;
-    right: 1.6rem;
-    width: 32px;
-    height: 32px;
-    border: 0;
-    background: #4a3350;
-    color: #f0c37d;
-    font-size: 0.9rem;
-    cursor: pointer;
-    box-shadow:
-      inset -4px -4px 0 0 #2a1c30,
-      inset 4px 4px 0 0 #6a4c74;
-  }
-  .quit:hover {
-    background: #e8b463;
-    color: #1b1620;
   }
 
   .inner {

@@ -24,10 +24,12 @@ export const Shell = {
     document.querySelector<HTMLElement>('[data-detail-layer]')?.addEventListener('click', (e) => {
       if (e.target === e.currentTarget) this.closeDetail();
     });
-    // 點面板外面的空白處也關閉
+    // 點面板外面的空白處關閉；標了 data-close-anywhere 的頁面點哪裡都關（連結除外）
     document.querySelectorAll<HTMLElement>('[data-panel-id]').forEach((overlay) => {
       overlay.addEventListener('click', (e) => {
-        if (e.target === overlay) this.close();
+        const anywhere = overlay.hasAttribute('data-close-anywhere');
+        const onLink = !!(e.target as HTMLElement).closest('a');
+        if (e.target === overlay || (anywhere && !onLink)) this.close();
       });
     });
 
