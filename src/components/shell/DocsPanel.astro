@@ -1,0 +1,93 @@
+---
+// 文件清單分頁(文章 / MC 地圖共用)。
+import Panel from './Panel.astro';
+import type { Doc } from '../../data/site';
+
+interface Props {
+  id: string;
+  title: string;
+  sub: string;
+  docs: Doc[];
+}
+const { id, title, sub, docs } = Astro.props;
+---
+
+<Panel id={id} title={title} sub={sub}>
+  <ul class="list">
+    {docs.map((d) => (
+      <li>
+        <a href={d.link} target="_blank" rel="noopener">
+          <span class="row-meta">
+            <span class="year">{d.year}</span>
+            <span class="tag">{d.tag}</span>
+          </span>
+          <span class="row-name">{d.name}</span>
+          <span class="row-desc">{d.desc}</span>
+          <span class="arrow">→</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+</Panel>
+
+<style>
+  .list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-width: 44rem;
+  }
+  .list a {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      'meta arrow'
+      'name arrow'
+      'desc arrow';
+    gap: 0.15rem 1rem;
+    align-items: center;
+    padding: 0.8rem 1rem;
+    border-left: 2px solid rgba(232, 180, 99, 0.35);
+    background: rgba(20, 18, 22, 0.55);
+    text-decoration: none;
+    transition: background 140ms ease-out, border-color 140ms ease-out, transform 140ms ease-out;
+  }
+  .list a:hover {
+    background: rgba(36, 30, 20, 0.8);
+    border-color: #e8b463;
+    transform: translateX(5px);
+  }
+  .row-meta {
+    grid-area: meta;
+    display: flex;
+    gap: 0.6rem;
+    font-family: ui-monospace, monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+    color: rgba(255, 255, 255, 0.42);
+  }
+  .row-name {
+    grid-area: name;
+    font-family: 'Noto Serif TC', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #f0c37d;
+  }
+  .row-desc {
+    grid-area: desc;
+    font-size: 0.84rem;
+    color: rgba(255, 255, 255, 0.72);
+  }
+  .arrow {
+    grid-area: arrow;
+    color: rgba(232, 180, 99, 0.5);
+    transition: color 140ms, transform 140ms;
+  }
+  .list a:hover .arrow {
+    color: #e8b463;
+  }
+</style>

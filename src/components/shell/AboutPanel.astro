@@ -1,0 +1,72 @@
+---
+// 關於分頁:頭像、自述、聯絡方式。
+import Panel from './Panel.astro';
+import { links } from '../../data/site';
+---
+
+<Panel id="about" title="關於" sub="COOK">
+  <div class="about">
+    <img class="avatar" src="/images/cook.jpg" alt="酷可" />
+    <div class="text">
+      <p>做遊戲,也做讓別人能做遊戲的東西。</p>
+      <p>從 2021 年到現在,九個遊戲同一個世界、兩代視覺小說引擎、三個編輯器。
+        題材換得很開,但底下都是 2D、TypeScript、自己寫的系統。</p>
+      <p>也畫圖。</p>
+      <ul class="contact">
+        {links.map((l) => (
+          <li><a href={l.url} target="_blank" rel="noopener">{l.name}</a></li>
+        ))}
+        <li><a href="mailto:b43096022@gmail.com">b43096022@gmail.com</a></li>
+      </ul>
+    </div>
+  </div>
+</Panel>
+
+<style>
+  .about {
+    display: flex;
+    gap: 1.8rem;
+    align-items: flex-start;
+    max-width: 44rem;
+  }
+  .avatar {
+    flex: 0 0 auto;
+    width: 132px;
+    height: 132px;
+    object-fit: cover;
+    border: 2px solid rgba(232, 180, 99, 0.4);
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%);
+  }
+  .text p {
+    margin: 0 0 0.9rem;
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.82);
+  }
+  .contact {
+    margin: 1.4rem 0 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.1rem;
+  }
+  .contact a {
+    font-size: 0.82rem;
+    color: #e8b463;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(232, 180, 99, 0.35);
+    padding-bottom: 1px;
+    transition: border-color 140ms;
+  }
+  .contact a:hover {
+    border-color: #e8b463;
+  }
+
+  @media (max-width: 640px) {
+    .about {
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+  }
+</style>

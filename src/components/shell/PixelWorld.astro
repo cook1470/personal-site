@@ -1,0 +1,200 @@
+---
+// 常駐主選單背景:天空、雲、地面、手繪小人。原本是首頁第一段,改造後升格為整站背景。
+---
+
+<canvas id="world"></canvas>
+
+<style>
+  #world {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    image-rendering: pixelated;
+    z-index: 0;
+  }
+</style>
+
+<script>
+  const world = document.getElementById('world') as HTMLCanvasElement;
+  const ctx = world.getContext('2d')!;
+  const PX = 4;
+  let SW = 0;
+  let SH = 0;
+  let groundY = 0;
+
+  function resize() {
+    SW = world.width = window.innerWidth;
+    SH = world.height = window.innerHeight;
+    groundY = SH - PX * 14;
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  type Cloud = { x: number; y: number; w: number; h: number; v: number };
+  const clouds: Cloud[] = [];
+  function spawnCloud(x: number) {
+    const s = 1 + Math.random() * 1.6;
+    clouds.push({
+      x,
+      y: SH * (0.06 + Math.random() * 0.32),
+      w: PX * (14 + Math.random() * 12) * s,
+      h: PX * 5 * s,
+      v: 6 + Math.random() * 10,
+    });
+  }
+  for (let i = 0; i < 6; i++) spawnCloud(Math.random() * SW);
+
+  // walker:idle 是 #0、#1 是眨眼幀;yv:音速小子型,跑很快
+  const SPRITES: Record<string, any> = {
+    walker: {
+      src: '/sprites/walker.png', fw: 18, fh: 30,
+      walk: { frames: [2, 3, 4, 5, 6, 7, 8, 9], fps: 8 },
+      idleFrame: 0, blinkFrame: 1,
+      speed: [30, 60], scale: 3,
+    },
+    yv: {
+      src: '/sprites/yv.png', fw: 32, fh: 32,
+      walk: { frames: [5, 6, 7, 8, 9, 10], fps: 16 },
+      idle: { frames: [0, 1, 2, 3, 4], fps: 2 },
+      speed: [150, 240], scale: 2,
+    },
+  };
+  const imgs: Record<string, HTMLImageElement> = {};
+  for (const key of Object.keys(SPRITES)) {
+    imgs[key] = new Image();
+    imgs[key].src = SPRITES[key].src;
+  }
+
+  type Walker = {
+    type: string; x: number; dir: number; speed: number;
+    frameI: number; frameT: number; blinkT: number; blinkOn: number;
+    state: string; stateT: number; leaving: boolean;
+  };
+  const walkers: Walker[] = [];
+  function spawnWalker(fromLeft: boolean) {
+    const type = Math.random() < 0.5 ? 'walker' : 'yv';
+    const def = SPRITES[type];
+    walkers.push({
+      type,
+      x: fromLeft ? -def.fw * def.scale : SW + def.fw * def.scale,
+      dir: fromLeft ? 1 : -1,
+      speed: def.speed[0] + Math.random() * (def.speed[1] - def.speed[0]),
+      frameI: 0, frameT: 0,
+      blinkT: 2 + Math.random() * 4, blinkOn: 0,
+      state: 'walk', stateT: 2 + Math.random() * 5,
+      leaving: false,
+    });
+  }
+  spawnWalker(true);
+  spawnWalker(false);
+  spawnWalker(true);
+  let spawnTimer = 2;
+
+  function currentFrame(wk: Walker) {
+    const def = SPRITES[wk.type];
+    if (wk.state === 'walk') return def.walk.frames[wk.frameI % def.walk.frames.length];
+    if (def.idle) return def.idle.frames[wk.frameI % def.idle.frames.length];
+    return wk.blinkOn > 0 ? def.blinkFrame : def.idleFrame;
+  }
+
+  function drawSprite(wk: Walker) {
+    const def = SPRITES[wk.type];
+    const img = imgs[wk.type];
+    if (!img.complete) return;
+    const fi = currentFrame(wk);
+    const dw = def.fw * def.scale;
+    const dh = def.fh * def.scale;
+    ctx.imageSmoothingEnabled = false;
+    ctx.save();
+    if (wk.dir === -1) {
+      ctx.translate(wk.x, 0);
+      ctx.scale(-1, 1);
+      ctx.translate(-wk.x, 0);
+    }
+    ctx.drawImage(img, fi * def.fw, 0, def.fw, def.fh, Math.round(wk.x - dw / 2), groundY - dh, dw, dh);
+    ctx.restore();
+  }
+
+  function updateWalker(wk: Walker, dt: number) {
+    const def = SPRITES[wk.type];
+    wk.stateT -= dt;
+    if (wk.state === 'walk') {
+      wk.x += wk.dir * wk.speed * dt;
+      wk.frameT += dt;
+      if (wk.frameT > 1 / def.walk.fps) { wk.frameT = 0; wk.frameI++; }
+    } else if (def.idle) {
+      wk.frameT += dt;
+      if (wk.frameT > 1 / def.idle.fps) { wk.frameT = 0; wk.frameI++; }
+    } else {
+      if (wk.blinkOn > 0) wk.blinkOn -= dt;
+      else {
+        wk.blinkT -= dt;
+        if (wk.blinkT <= 0) { wk.blinkOn = 0.15; wk.blinkT = 2 + Math.random() * 4; }
+      }
+    }
+    if (wk.stateT <= 0) {
+      if (!wk.leaving && Math.random() < 0.22) {
+        wk.leaving = true;
+        wk.state = 'walk';
+        wk.stateT = 99;
+      } else {
+        const roll = Math.random();
+        if (roll < 0.35) {
+          wk.state = 'idle'; wk.frameI = 0; wk.frameT = 0; wk.stateT = 1.5 + Math.random() * 3;
+        } else {
+          wk.state = 'walk'; wk.stateT = 2 + Math.random() * 5;
+          if (!wk.leaving && Math.random() < 0.35) wk.dir *= -1;
+        }
+      }
+    }
+  }
+
+  let last = performance.now();
+  function tick(now: number) {
+    const dt = Math.min((now - last) / 1000, 0.05);
+    last = now;
+
+    const grad = ctx.createLinearGradient(0, 0, 0, groundY);
+    grad.addColorStop(0, '#7ec8f7');
+    grad.addColorStop(1, '#cfeaff');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, SW, groundY);
+
+    ctx.fillStyle = 'rgba(255,255,255,.9)';
+    for (const c of clouds) {
+      c.x += c.v * dt;
+      if (c.x - c.w > SW) { c.x = -c.w; c.y = SH * (0.06 + Math.random() * 0.32); }
+      ctx.fillRect(c.x, c.y, c.w, c.h);
+      ctx.fillRect(c.x + c.w * 0.18, c.y - c.h * 0.6, c.w * 0.5, c.h * 0.7);
+    }
+
+    ctx.fillStyle = '#4caf50';
+    ctx.fillRect(0, groundY, SW, PX * 2);
+    ctx.fillStyle = '#3d8b40';
+    for (let x = 0; x < SW; x += PX * 2) ctx.fillRect(x, groundY + PX * 2, PX, PX);
+    ctx.fillStyle = '#5d4030';
+    ctx.fillRect(0, groundY + PX * 3, SW, SH - groundY);
+    ctx.fillStyle = '#4a3226';
+    for (let x = 0; x < SW; x += PX * 6) {
+      ctx.fillRect(x + ((x / (PX * 6)) % 2) * PX * 3, groundY + PX * 6, PX * 2, PX);
+      ctx.fillRect(x, groundY + PX * 10, PX * 2, PX);
+    }
+
+    for (let i = walkers.length - 1; i >= 0; i--) {
+      const wk = walkers[i];
+      updateWalker(wk, dt);
+      if (wk.x < -120 || wk.x > SW + 120) { walkers.splice(i, 1); continue; }
+      drawSprite(wk);
+    }
+    spawnTimer -= dt;
+    if (spawnTimer <= 0 && walkers.length < 9) {
+      spawnWalker(Math.random() < 0.5);
+      spawnTimer = 1.5 + Math.random() * 4;
+    }
+
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+</script>

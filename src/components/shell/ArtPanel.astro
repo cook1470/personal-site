@@ -1,0 +1,73 @@
+---
+// 繪圖分頁:縮圖牆,點擊回 pixiv 原頁。
+import Panel from './Panel.astro';
+import { art, PIXIV_HOME } from '../../data/site';
+---
+
+<Panel id="art" title="繪圖" sub="ILLUSTRATION">
+  <div class="wall">
+    {art.map((a) => (
+      <a class="piece" href={`https://www.pixiv.net/artworks/${a.id}`} target="_blank" rel="noopener">
+        <img src={`/images/art/${a.id}.jpg`} alt={a.title} loading="lazy" />
+        <span class="cap">{a.title}</span>
+      </a>
+    ))}
+  </div>
+  <p class="more">
+    <a href={PIXIV_HOME} target="_blank" rel="noopener">更多在 pixiv →</a>
+  </p>
+</Panel>
+
+<style>
+  .wall {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 0.7rem;
+  }
+  .piece {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    border: 1px solid rgba(232, 180, 99, 0.2);
+    text-decoration: none;
+    transition: border-color 140ms ease-out, transform 140ms ease-out;
+  }
+  .piece:hover {
+    border-color: #e8b463;
+    transform: translateY(-3px);
+  }
+  .piece img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+  }
+  .cap {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 0.4rem 0.6rem;
+    background: linear-gradient(180deg, transparent, rgba(6, 6, 8, 0.88));
+    font-size: 0.72rem;
+    color: rgba(255, 255, 255, 0.9);
+    opacity: 0;
+    transition: opacity 140ms ease-out;
+  }
+  .piece:hover .cap {
+    opacity: 1;
+  }
+  .more {
+    margin: 1.4rem 0 0;
+  }
+  .more a {
+    font-size: 0.85rem;
+    color: #e8b463;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(232, 180, 99, 0.4);
+    padding-bottom: 2px;
+  }
+  .more a:hover {
+    border-color: #e8b463;
+  }
+</style>
