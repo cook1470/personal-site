@@ -1,5 +1,5 @@
 ---
-// 分頁面板外框。尺寸依內容給,不一律滿版;點面板外面也能關。
+// 分頁面板外框。尺寸依內容給，不一律滿版;點面板外面也能關。
 interface Props {
   id: string;
   title: string;
@@ -33,7 +33,7 @@ const { id, title, sub, size = 'md' } = Astro.props;
     padding: 4vh 4vw;
     background: rgba(0, 0, 0, 0.62);
   }
-  /* hidden 屬性會輸給 display:flex,必須明寫(見 PITFALLS) */
+  /* hidden 屬性會輸給 display:flex，必須明寫(見 PITFALLS) */
   .overlay[hidden] {
     display: none;
   }
@@ -55,7 +55,7 @@ const { id, title, sub, size = 'md' } = Astro.props;
     box-shadow: 0 18px 60px rgba(0, 0, 0, 0.75);
     clip-path: polygon(0 0, 100% 0, 100% calc(100% - 18px), calc(100% - 18px) 100%, 0 100%);
   }
-  /* 尺寸依內容給:關於只有幾行字,不該跟作品格子一樣大 */
+  /* 尺寸依內容給：關於只有幾行字，不該跟作品格子一樣大 */
   .panel.sm {
     width: min(30rem, 100%);
   }

@@ -1,5 +1,5 @@
 ---
-// 地表像素世界(概念沿自 cookland):天空、雲、地面、手繪小人,加社群連結
+// 地表像素世界(概念沿自 cookland)：天空、雲、地面、手繪小人，加社群連結
 import { links } from '../data/site';
 ---
 
@@ -8,7 +8,7 @@ import { links } from '../data/site';
   <div class="hero-text">
     <p class="hero-kicker">GAME DEV / ILLUSTRATION</p>
     <h1>酷可 <span class="latin">cook</span></h1>
-    <p class="hero-line">做遊戲,也做讓別人能做遊戲的東西。</p>
+    <p class="hero-line">做遊戲，也做讓別人能做遊戲的東西。</p>
     <nav class="links">
       {links.map((l) => <a href={l.url}>{l.name}</a>)}
     </nav>
@@ -138,7 +138,7 @@ import { links } from '../data/site';
   }
   for (let i = 0; i < 6; i++) spawnCloud(Math.random() * SW);
 
-  // walker:idle 是 #0、#1 是眨眼幀;yv:音速小子型,跑很快
+  // walker:idle 是 #0、#1 是眨眼幀;yv：音速小子型，跑很快
   const SPRITES: Record<string, any> = {
     walker: {
       src: '/sprites/walker.png', fw: 18, fh: 30,

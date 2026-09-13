@@ -1,12 +1,12 @@
 ---
-// 畫廊:精選圖的橫向膠卷帶。自動緩慢左移,可拖曳滑動;拖過的那下不觸發連結,原地點擊才導頁。
-// 無縫循環靠把整條內容畫兩份、位移對半長取模,所以 track 內是兩段相同的 items。
+// 畫廊：精選圖的橫向膠卷帶。自動緩慢左移，可拖曳滑動;拖過的那下不觸發連結，原地點擊才導頁。
+// 無縫循環靠把整條內容畫兩份、位移對半長取模，所以 track 內是兩段相同的 items。
 import { art, PIXIV_HOME } from '../data/site';
 ---
 
 <section class="gallery">
   <h2>畫</h2>
-  <p class="gallery-note">點圖可到 pixiv 看原圖,按住可以左右滑。</p>
+  <p class="gallery-note">點圖可到 pixiv 看原圖，按住可以左右滑。</p>
   <div class="film-strip" id="film-strip">
     <div class="film-track" id="film-track">
       {[0, 1].map(() => (
@@ -72,7 +72,7 @@ import { art, PIXIV_HOME } from '../data/site';
   strip.addEventListener('pointerup', endDrag);
   strip.addEventListener('pointercancel', endDrag);
 
-  // 拖曳過就吞掉這次 click,免得放開時誤開連結
+  // 拖曳過就吞掉這次 click，免得放開時誤開連結
   strip.addEventListener(
     'click',
     (e) => {
@@ -95,7 +95,7 @@ import { art, PIXIV_HOME } from '../data/site';
   }
   requestAnimationFrame(tick);
 
-  // 圖片載完寬度會變,重新量
+  // 圖片載完寬度會變，重新量
   window.addEventListener('load', measure);
 </script>
 

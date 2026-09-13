@@ -1,5 +1,5 @@
 ---
-// 地底證物板:作品照片 + 金線 + 紙張視窗(仿 CookTWGame PaperDialog)
+// 地底證物板：作品照片 + 金線 + 紙張視窗(仿 CookTWGame PaperDialog)
 import { pinned, threads, BOARD_HEIGHT } from '../data/site';
 ---
 
@@ -54,7 +54,7 @@ import { pinned, threads, BOARD_HEIGHT } from '../data/site';
 </div>
 
 <script define:vars={{ threads, pinned }}>
-  // 依實際版面位置把金線畫在 SVG 層,線帶一點下垂弧度
+  // 依實際版面位置把金線畫在 SVG 層，線帶一點下垂弧度
   const board = document.getElementById('board');
   const svg = document.getElementById('threads');
 
@@ -86,10 +86,10 @@ import { pinned, threads, BOARD_HEIGHT } from '../data/site';
 
   draw();
   window.addEventListener('resize', draw);
-  // 字型載入完成後位置可能微移,重畫一次
+  // 字型載入完成後位置可能微移，重畫一次
   if (document.fonts?.ready) document.fonts.ready.then(draw);
 
-  // 紙張視窗:黑幕淡入 + 內容 Back.Out 回彈,GO 才真的前往
+  // 紙張視窗：黑幕淡入 + 內容 Back.Out 回彈,GO 才真的前往
   const overlay = document.getElementById('paper-overlay');
   const paper = document.getElementById('paper');
   let animating = false;
@@ -114,7 +114,7 @@ import { pinned, threads, BOARD_HEIGHT } from '../data/site';
     }
     const photo = document.getElementById('paper-photo');
     const photoImg = document.getElementById('paper-photo-img');
-    // 有影片就不再放靜態截圖,版面留給影片
+    // 有影片就不再放靜態截圖，版面留給影片
     if (w.img && !w.video) {
       photoImg.src = w.img;
       photoImg.alt = w.name;
@@ -327,7 +327,7 @@ import { pinned, threads, BOARD_HEIGHT } from '../data/site';
     margin-top: 0.15rem;
   }
 
-  /* 紙張視窗:舊紙張質感。hidden 切換的元素都要補 [hidden]{display:none},見 PITFALLS */
+  /* 紙張視窗：舊紙張質感。hidden 切換的元素都要補 [hidden]{display:none}，見 PITFALLS */
   .paper-overlay[hidden] {
     display: none;
   }
@@ -503,7 +503,7 @@ import { pinned, threads, BOARD_HEIGHT } from '../data/site';
     color: #3a2f1e;
   }
 
-  /* 窄螢幕:板收起來,照片改為交錯堆疊 */
+  /* 窄螢幕：板收起來，照片改為交錯堆疊 */
   @media (max-width: 760px) {
     .board {
       height: auto !important;

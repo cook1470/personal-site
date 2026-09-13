@@ -1,5 +1,5 @@
 ---
-// 常駐主選單背景:天空、雲、地面、手繪小人。原本是首頁第一段,改造後升格為整站背景。
+// 常駐主選單背景：天空、雲、地面、手繪小人。原本是首頁第一段，改造後升格為整站背景。
 ---
 
 <canvas id="world"></canvas>
@@ -46,7 +46,7 @@
   }
   for (let i = 0; i < 6; i++) spawnCloud(Math.random() * SW);
 
-  // walker:idle 是 #0、#1 是眨眼幀;yv:音速小子型,跑很快
+  // walker:idle 是 #0、#1 是眨眼幀;yv：音速小子型，跑很快
   const SPRITES: Record<string, any> = {
     walker: {
       src: '/sprites/walker.png', fw: 18, fh: 30,

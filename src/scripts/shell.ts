@@ -1,4 +1,4 @@
-// 分頁切換:主選單 ↔ 面板 ↔ 作品詳情。鍵盤與滑鼠等價。
+// 分頁切換：主選單 ↔ 面板 ↔ 作品詳情。鍵盤與滑鼠等價。
 const PANEL_IDS = ['works', 'art', 'docs', 'maps', 'about'];
 
 export const Shell = {
@@ -36,7 +36,7 @@ export const Shell = {
       else this.close();
       return;
     }
-    // 數字鍵只在主畫面有效,免得在面板裡誤觸換頁
+    // 數字鍵只在主畫面有效，免得在面板裡誤觸換頁
     if (document.querySelector('[data-panel-id]:not([hidden])')) return;
     const n = parseInt(e.key, 10);
     if (n >= 1 && n <= PANEL_IDS.length) this.open(PANEL_IDS[n - 1]);
@@ -55,19 +55,19 @@ export const Shell = {
     this.menu?.classList.remove('back');
     this.menu?.classList.add('away');
     panel.hidden = false;
-    // 強制 reflow,否則同一個面板再開一次時進場動畫不會重播
+    // 強制 reflow，否則同一個面板再開一次時進場動畫不會重播
     panel.classList.remove('opening');
     void panel.offsetWidth;
     panel.classList.add('opening');
   },
 
   close() {
-    // 以畫面上實際開著的面板為準,不信任 current:狀態一旦不同步就再也關不掉
+    // 以畫面上實際開著的面板為準，不信任 current：狀態一旦不同步就再也關不掉
     const panel = document.querySelector<HTMLElement>('[data-panel-id]:not([hidden])');
     this.current = null;
     this.closeWork();
     if (!panel) return;
-    // 關閉不做退場動畫,直接收掉
+    // 關閉不做退場動畫，直接收掉
     panel.hidden = true;
     panel.classList.remove('opening');
     this.menu?.classList.add('back');
@@ -96,7 +96,7 @@ export const Shell = {
     if (grid) grid.hidden = false;
   },
 
-  // 影片開啟才嵌入、關閉就移除,避免背景持續載入
+  // 影片開啟才嵌入、關閉就移除，避免背景持續載入
   mountVideo(detail: HTMLElement) {
     const box = detail.querySelector<HTMLElement>('[data-video]');
     if (!box || box.querySelector('iframe')) return;
