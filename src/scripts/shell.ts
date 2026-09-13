@@ -1,9 +1,8 @@
-// 分頁切換：主選單 ↔ 面板 ↔ 作品詳情。鍵盤與滑鼠等價。
+// 分頁切換：主選單 ↔ 面板 ↔ 作品長條。鍵盤與滑鼠等價。
 const PANEL_IDS = ['works', 'art', 'docs', 'maps', 'about'];
 
 export const Shell = {
   menu: null as HTMLElement | null,
-  picked: 0,
   current: null as string | null,
 
   init() {
@@ -15,16 +14,18 @@ export const Shell = {
     document.querySelectorAll<HTMLButtonElement>('[data-close]').forEach((btn) => {
       btn.addEventListener('click', () => this.close());
     });
-    document.querySelectorAll<HTMLButtonElement>('[data-work]').forEach((btn) => {
-      btn.addEventListener('click', () => this.openWork(btn.dataset.work!));
-      btn.addEventListener('mouseenter', () => this.select(Number(btn.dataset.index)));
-    });
-    document.querySelectorAll<HTMLButtonElement>('[data-page-step]').forEach((btn) => {
-      btn.addEventListener('click', () => this.stepPage(Number(btn.dataset.pageStep)));
-    });
-    this.select(0);
-    document.querySelectorAll<HTMLButtonElement>('[data-back]').forEach((btn) => {
-      btn.addEventListener('click', () => this.closeWork());
+    document.querySelectorAll<HTMLElement>('[data-work]').forEach((strip) => {
+      strip.addEventListener('click', (e) => {
+        // 條子裡的連結照常運作，不順手把條子收起來
+        if ((e.target as HTMLElement).closest('a')) return;
+        this.toggleStrip(strip);
+      });
+      strip.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          this.toggleStrip(strip);
+        }
+      });
     });
     // 點面板外面的空白處也關閉
     document.querySelectorAll<HTMLElement>('[data-panel-id]').forEach((overlay) => {
@@ -38,24 +39,20 @@ export const Shell = {
 
   onKey(e: KeyboardEvent) {
     if (e.key === 'Escape') {
-      if (this.currentWork()) this.closeWork();
+      const open = this.openStripEl();
+      if (open) open.classList.remove('open');
       else this.close();
       return;
     }
-    // 作品格子陣：方向鍵走格、Enter 開啟
-    if (this.current === 'works' && !this.currentWork()) {
-      const slots = this.slots();
-      if (!slots.length) return;
-      const cols = this.slotCols();
-      const step = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -cols, ArrowDown: cols }[e.key];
-      if (step !== undefined) {
+    // 作品長條：左右鍵換條
+    if (this.current === 'works') {
+      const dir = { ArrowLeft: -1, ArrowRight: 1 }[e.key];
+      if (dir !== undefined) {
         e.preventDefault();
-        this.select(Math.min(slots.length - 1, Math.max(0, this.picked + step)));
-        return;
-      }
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        this.openWork(slots[this.picked].dataset.work!);
+        const strips = this.strips();
+        const now = strips.indexOf(this.openStripEl()!);
+        const next = now < 0 ? 0 : Math.min(strips.length - 1, Math.max(0, now + dir));
+        this.openStrip(strips[next]);
         return;
       }
     }
@@ -88,7 +85,7 @@ export const Shell = {
     // 以畫面上實際開著的面板為準，不信任 current：狀態一旦不同步就再也關不掉
     const panel = document.querySelector<HTMLElement>('[data-panel-id]:not([hidden])');
     this.current = null;
-    this.closeWork();
+    this.openStripEl()?.classList.remove('open');
     if (!panel) return;
     // 關閉不做退場動畫，直接收掉
     panel.hidden = true;
@@ -97,84 +94,22 @@ export const Shell = {
     this.menu?.classList.remove('away');
   },
 
-  slots() {
-    return Array.from(document.querySelectorAll<HTMLButtonElement>('[data-work]'));
+  strips() {
+    return Array.from(document.querySelectorAll<HTMLElement>('[data-work]'));
   },
 
-  // 欄數從實際算出的 grid 讀，響應式換欄時方向鍵才不會走錯
-  slotCols() {
-    const page = document.querySelector('.page');
-    if (!page) return 1;
-    return getComputedStyle(page).gridTemplateColumns.split(' ').length;
+  openStripEl() {
+    return document.querySelector<HTMLElement>('[data-work].open');
   },
 
-  perPage() {
-    return document.querySelector('.page')?.childElementCount ?? 1;
+  openStrip(strip: HTMLElement) {
+    this.strips().forEach((s) => s.classList.toggle('open', s === strip));
   },
 
-  select(i: number) {
-    this.picked = i;
-    this.slots().forEach((s, n) => s.classList.toggle('on', n === i));
-    document.querySelectorAll<HTMLElement>('[data-readout]').forEach((r, n) => {
-      r.hidden = n !== i;
-    });
-    this.showPage(Math.floor(i / this.perPage()));
-  },
-
-  showPage(p: number) {
-    document.querySelectorAll<HTMLElement>('[data-page]').forEach((el, n) => {
-      el.hidden = n !== p;
-    });
-    document.querySelectorAll<HTMLElement>('[data-dot]').forEach((el, n) => {
-      el.classList.toggle('on', n === p);
-    });
-  },
-
-  // 翻頁時把選取移到新頁的第一格，游標不會留在看不見的地方
-  stepPage(dir: number) {
-    const per = this.perPage();
-    const pageCount = document.querySelectorAll('[data-page]').length;
-    const next = Math.floor(this.picked / per) + dir;
-    if (next < 0 || next >= pageCount) return;
-    this.select(Math.min(this.slots().length - 1, next * per));
-  },
-
-  currentWork() {
-    return document.querySelector<HTMLElement>('[data-detail]:not([hidden])');
-  },
-
-  openWork(workId: string) {
-    const grid = document.querySelector<HTMLElement>('[data-works-grid]');
-    const detail = document.querySelector<HTMLElement>(`[data-detail="${workId}"]`);
-    if (!grid || !detail) return;
-    grid.hidden = true;
-    detail.hidden = false;
-    this.mountVideo(detail);
-  },
-
-  closeWork() {
-    const detail = this.currentWork();
-    if (!detail) return;
-    this.unmountVideo(detail);
-    detail.hidden = true;
-    const grid = document.querySelector<HTMLElement>('[data-works-grid]');
-    if (grid) grid.hidden = false;
-  },
-
-  // 影片開啟才嵌入、關閉就移除，避免背景持續載入
-  mountVideo(detail: HTMLElement) {
-    const box = detail.querySelector<HTMLElement>('[data-video]');
-    if (!box || box.querySelector('iframe')) return;
-    const iframe = document.createElement('iframe');
-    iframe.src = `https://www.youtube.com/embed/${box.dataset.video}`;
-    iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; picture-in-picture';
-    iframe.allowFullscreen = true;
-    box.appendChild(iframe);
-  },
-
-  unmountVideo(detail: HTMLElement) {
-    const box = detail.querySelector<HTMLElement>('[data-video]');
-    if (box) box.innerHTML = '';
+  toggleStrip(strip: HTMLElement) {
+    const wasOpen = strip.classList.contains('open');
+    this.strips().forEach((s) => s.classList.remove('open'));
+    if (!wasOpen) strip.classList.add('open');
   },
 };
 
