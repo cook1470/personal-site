@@ -8,8 +8,12 @@
   cook1470.com / www → personal-site 專案；phantasia.cook1470.com → phantasia 專案
   （視覺小說編輯器，由 phantasia-engine 的 Claude 出靜態包、我負責部署）；
   play.cook1470.com → phantasia-demo 專案（遊戲 demo）。
-  DNS 為四條 proxied CNAME 指向各 pages.dev。DNS 寫入 token（限 cook1470.com zone）存
-  %LOCALAPPDATA%\claude-site\cf-dns-token.txt，不進 git。
+  另有 sitdown.cook1470.com → cook1470.github.io（遊戲「坐下，勇者」，GitHub Pages，
+  灰雲不 proxy 讓 GitHub 簽憑證），由 forge 維護。
+  DNS 寫入 token（限 cook1470.com zone）存 %LOCALAPPDATA%\claude-site\cf-dns-token.txt，
+  不進 git；2026-09-13 已複製一份到 Mac 給 forge（~/.config/forge/cf_token），
+  兩邊都能改 DNS，改法一律直接打 REST API。zone id 9a86a4e5a2d2aba4603de1ad0c74e65a。
+  用戶不在家不開 Windows（只有 Mac 24hr 開），所以會卡在 Windows 的步驟都該往 Mac 搬。
 - 部署：push 到 master 由 GitHub Actions 自動建置並直傳（.github/workflows/deploy.yml，
   2026-09-13 起）。任何機器 push 都會上線，不需本機 wrangler，Windows 不必開機。
   金鑰是 repo secret CLOUDFLARE_API_TOKEN（權限 Account / Cloudflare Pages / Edit），

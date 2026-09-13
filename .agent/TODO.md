@@ -15,5 +15,7 @@
 - phantasia / phantasia-demo 的部署仍綁在 Windows 這台（別的 Claude 出包、這邊 wrangler 傳），
   要脫離得先讓它把產物 push 進 repo，再照 personal-site 的做法接 Actions
 - 提醒用戶刪掉後台那把權限錯誤的舊 DNS token
+- Pages 綁自訂網域仍只有 Windows 做得到（靠本機 wrangler OAuth，不是 API token），
+  該找方法搬到 Mac 或改用帶 Pages 權限的 token
 - `.agent/features/creator_profile.md` 與 PROJECT_GOALS.md 仍是半形逗號，
   其餘文件與 src 已全數改全形
