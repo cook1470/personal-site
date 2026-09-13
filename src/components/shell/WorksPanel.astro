@@ -50,11 +50,11 @@ import { pinned } from '../../data/site';
     inset: 0;
     z-index: 3;
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 24rem;
-    gap: 2.5rem;
+    grid-template-columns: minmax(0, 1fr) 27rem;
+    gap: 1.5rem;
     align-items: center;
-    padding: 4rem 3rem 4rem 5rem;
-    background: rgba(8, 6, 10, 0.9);
+    padding: 4.5rem 2.5rem 3rem 4rem;
+    background: rgba(8, 6, 10, 0.95);
   }
   .works[hidden] {
     display: none;
@@ -112,11 +112,11 @@ import { pinned } from '../../data/site';
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    max-height: 52vh;
+    max-height: 64vh;
   }
   .shot img {
-    max-width: 100%;
-    max-height: 52vh;
+    width: 100%;
+    max-height: 64vh;
     object-fit: contain;
     display: block;
     outline: 4px solid #6b4f2a;
@@ -180,14 +180,16 @@ import { pinned } from '../../data/site';
   .list {
     position: relative;
     height: 100%;
+    /* 左邊留出突出的空間，否則選中那列往左移會被 overflow 裁掉字 */
+    padding-left: 2.5rem;
     overflow: hidden;
-    -webkit-mask-image: linear-gradient(transparent, #000 14%, #000 86%, transparent);
-    mask-image: linear-gradient(transparent, #000 14%, #000 86%, transparent);
+    -webkit-mask-image: linear-gradient(transparent, #000 4%, #000 96%, transparent);
+    mask-image: linear-gradient(transparent, #000 4%, #000 96%, transparent);
   }
   .rail {
     position: absolute;
-    top: 50%;
-    left: 0;
+    top: 0;
+    left: 2.5rem;
     right: 0;
     display: flex;
     flex-direction: column;

@@ -27,6 +27,10 @@ export const Shell = {
     });
 
     window.addEventListener('keydown', (e) => this.onKey(e));
+
+    // 網址帶 #works 之類就直接開那一頁
+    const hash = location.hash.slice(1);
+    if (PANEL_IDS.includes(hash)) this.open(hash);
   },
 
   onKey(e: KeyboardEvent) {
@@ -94,11 +98,14 @@ export const Shell = {
     document.querySelectorAll<HTMLElement>('[data-view]').forEach((v, n) => {
       v.hidden = n !== i;
     });
-    // 清單跟著捲，選中的那列固定在中間
+    // 清單跟著捲，選中的那列盡量置中，但不捲過頭露出上下空白
     const rail = document.querySelector<HTMLElement>('[data-rail]');
     const row = rows[i];
-    if (rail && row) {
-      rail.style.transform = `translateY(${-(row.offsetTop + row.offsetHeight / 2)}px)`;
+    const view = rail?.parentElement;
+    if (rail && row && view) {
+      const centered = row.offsetTop + row.offsetHeight / 2 - view.clientHeight / 2;
+      const max = Math.max(0, rail.scrollHeight - view.clientHeight);
+      rail.style.transform = `translateY(${-Math.min(max, Math.max(0, centered))}px)`;
     }
   },
 };
