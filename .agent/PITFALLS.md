@@ -9,7 +9,8 @@
   預覽網址內容正確、正式網域不動,很難察覺。
 
 - HTML `hidden` 屬性會被自己 CSS 的 `display: flex/inline-block` 蓋掉(UA 樣式必輸給
-  作者樣式)。已踩兩次(paper-overlay 整頁不可點、paper-go 未公開仍顯示 GO)。
+  作者樣式)。已踩三次(paper-overlay 整頁不可點、paper-go 未公開仍顯示 GO、
+  作品格子 display:grid 沒收起來,詳情長在格子下面)。
   規則:任何會用 `hidden` 切換的元素,設 display 時必須同時寫 `[hidden] { display: none }`。
 
 - 用 PowerShell Set-Content 改含中文的原始碼會把編碼弄壞成亂碼(2026-08-11 踩過,

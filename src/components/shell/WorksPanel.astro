@@ -8,7 +8,6 @@ import { pinned } from '../../data/site';
   <div class="grid" data-works-grid>
     {pinned.map((w, i) => (
       <button class="cell" data-work={w.id}>
-        {w.img && <span class="shot" style={`background-image:url(${w.img})`}></span>}
         <span class="cell-in">
           <span class="meta">
             <span class="year">{w.year}</span>
@@ -51,6 +50,9 @@ import { pinned } from '../../data/site';
     grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
     gap: 0.9rem;
   }
+  .grid[hidden] {
+    display: none;
+  }
   .cell {
     position: relative;
     display: block;
@@ -71,17 +73,6 @@ import { pinned } from '../../data/site';
     background: rgba(36, 30, 20, 0.75);
     transform: translateY(-3px);
     outline: none;
-  }
-  .shot {
-    position: absolute;
-    inset: 0;
-    background-size: cover;
-    background-position: center;
-    opacity: 0.16;
-    transition: opacity 140ms ease-out;
-  }
-  .cell:hover .shot {
-    opacity: 0.28;
   }
   .cell-in {
     position: relative;
