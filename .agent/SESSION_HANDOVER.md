@@ -17,14 +17,14 @@
   `#works/<作品 id>` 連詳情一起開。截圖驗證與對外分享都用得到。
 - 作品與關於是整片全畫面（自己的容器，不套 Panel）；文、磚、繪圖仍用 Panel 視窗。
 - 看畫面的方法與手機版怎麼截，見 PITFALLS.md。改版面務必自己截圖看過再交出去。
-- 部署：npm run build → npx wrangler@4.120.0 pages deploy dist --project-name personal-site --branch master。
+- 部署：push 到 master 就自動上線（GitHub Actions），不必手動 deploy。
   網域、DNS token、各子網域見 PROJECT_CONTEXT.md。
 - 與 phantasia-engine 專案的 Claude 用內建 SendMessage 聯絡（ListAgents 找得到）。
   它出靜態包放 %LOCALAPPDATA%\claude-bridge\outbox\，我負責 wrangler 部署。
   部署出口只在本專案，不要教對方自己 deploy（避免雙寫）。
   注意 phantasia / phantasia-demo 的 production 分支是 main，不是 master。
 - Mac 端由 Mio 一起開發，clone 在 /Users/cook/agents/_public/projects/personal-site。
-  部署出口只有 Windows 這台（wrangler token 在本機），Mac 端只 push master，不自己 deploy。
+  兩邊都 push master 即可，部署不再綁任何一台機器。
 
 ## 目前狀態
 

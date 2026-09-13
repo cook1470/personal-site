@@ -12,7 +12,8 @@
 
 ## 工程
 
-- 考慮 git 連動自動部署（目前 wrangler 直傳；Mac 端要能部署的話這個做掉最乾淨）
+- phantasia / phantasia-demo 的部署仍綁在 Windows 這台（別的 Claude 出包、這邊 wrangler 傳），
+  要脫離得先讓它把產物 push 進 repo，再照 personal-site 的做法接 Actions
 - 提醒用戶刪掉後台那把權限錯誤的舊 DNS token
 - `.agent/features/creator_profile.md` 與 PROJECT_GOALS.md 仍是半形逗號，
   其餘文件與 src 已全數改全形

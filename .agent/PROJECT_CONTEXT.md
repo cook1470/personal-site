@@ -10,7 +10,12 @@
   play.cook1470.com → phantasia-demo 專案（遊戲 demo）。
   DNS 為四條 proxied CNAME 指向各 pages.dev。DNS 寫入 token（限 cook1470.com zone）存
   %LOCALAPPDATA%\claude-site\cf-dns-token.txt，不進 git。
-- 部署：直傳模式，npm run build 後
+- 部署：push 到 master 由 GitHub Actions 自動建置並直傳（.github/workflows/deploy.yml，
+  2026-09-13 起）。任何機器 push 都會上線，不需本機 wrangler，Windows 不必開機。
+  金鑰是 repo secret CLOUDFLARE_API_TOKEN（權限 Account / Cloudflare Pages / Edit），
+  帳號編號寫在 workflow 裡。Direct Upload 專案無法改接 Cloudflare 原生 Git 連動，
+  官方只能另建專案，所以走 Actions 跑 wrangler，維持現有專案與網域不動。
+  要手動出一版仍可在本機跑
   npx wrangler@4.120.0 pages deploy dist --project-name personal-site --branch master。
   GitHub：https://github.com/cook1470/personal-site（master）。
   注意各專案的 production 分支不一致，見 PITFALLS。
