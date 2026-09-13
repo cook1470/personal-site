@@ -19,6 +19,9 @@
   `--force-prefers-reduced-motion` 不可省：headless 的虛擬時鐘會把進場動畫凍結在
   opacity 0 的中間狀態，拍出來像「CSS 完全沒生效」，會誤判成樣式壞掉（已誤判一次）。
   另外要截 build 後的 `astro preview`，dev server 的 HMR 注入在 headless 下不穩。
+  **`--window-size` 壓不到手機寬度**：Windows 上 Edge 視窗最小寬度約 492px，
+  設 390 也還是用 492 排版，截圖卻只裁 390 寬，看起來像整頁往右溢出（誤判過一次）。
+  要看手機版得另外寫一頁 `<iframe width=390>` 指向網站，再截那個框。
 
 - 用 PowerShell Set-Content 改含中文的原始碼會把編碼弄壞成亂碼(2026-08-11 踩過,
   靠 git checkout 救回)。改檔一律用 Write/Edit 工具,shell 只跑指令不碰檔案內容。
