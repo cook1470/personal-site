@@ -19,6 +19,9 @@ export const Shell = {
       btn.addEventListener('click', () => this.openWork(btn.dataset.work!));
       btn.addEventListener('mouseenter', () => this.select(Number(btn.dataset.index)));
     });
+    document.querySelectorAll<HTMLButtonElement>('[data-page-step]').forEach((btn) => {
+      btn.addEventListener('click', () => this.stepPage(Number(btn.dataset.pageStep)));
+    });
     this.select(0);
     document.querySelectorAll<HTMLButtonElement>('[data-back]').forEach((btn) => {
       btn.addEventListener('click', () => this.closeWork());
@@ -100,9 +103,13 @@ export const Shell = {
 
   // 欄數從實際算出的 grid 讀，響應式換欄時方向鍵才不會走錯
   slotCols() {
-    const grid = document.querySelector('.slots');
-    if (!grid) return 1;
-    return getComputedStyle(grid).gridTemplateColumns.split(' ').length;
+    const page = document.querySelector('.page');
+    if (!page) return 1;
+    return getComputedStyle(page).gridTemplateColumns.split(' ').length;
+  },
+
+  perPage() {
+    return document.querySelector('.page')?.childElementCount ?? 1;
   },
 
   select(i: number) {
@@ -111,6 +118,25 @@ export const Shell = {
     document.querySelectorAll<HTMLElement>('[data-readout]').forEach((r, n) => {
       r.hidden = n !== i;
     });
+    this.showPage(Math.floor(i / this.perPage()));
+  },
+
+  showPage(p: number) {
+    document.querySelectorAll<HTMLElement>('[data-page]').forEach((el, n) => {
+      el.hidden = n !== p;
+    });
+    document.querySelectorAll<HTMLElement>('[data-dot]').forEach((el, n) => {
+      el.classList.toggle('on', n === p);
+    });
+  },
+
+  // 翻頁時把選取移到新頁的第一格，游標不會留在看不見的地方
+  stepPage(dir: number) {
+    const per = this.perPage();
+    const pageCount = document.querySelectorAll('[data-page]').length;
+    const next = Math.floor(this.picked / per) + dir;
+    if (next < 0 || next >= pageCount) return;
+    this.select(Math.min(this.slots().length - 1, next * per));
   },
 
   currentWork() {
