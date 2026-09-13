@@ -74,6 +74,7 @@ import { pinned } from '../../data/site';
     flex-direction: column;
     padding: 0 clamp(1.2rem, 5vw, 4rem) 2rem;
     background: rgba(8, 6, 10, 0.94);
+    overflow-x: hidden;
     overflow-y: auto;
     scrollbar-width: none;
   }
@@ -138,12 +139,13 @@ import { pinned } from '../../data/site';
   /* 一排三張，整頁往下捲 */
   .cards {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 1.4rem;
     align-content: start;
     padding-bottom: 0.5rem;
   }
   .card {
+    min-width: 0;
     display: flex;
     flex-direction: column;
     padding: 0;
@@ -324,6 +326,7 @@ import { pinned } from '../../data/site';
     flex-direction: column;
     gap: 0.42rem;
     max-height: 34vh;
+    overflow-x: hidden;
     overflow-y: auto;
     scrollbar-width: none;
   }
@@ -374,10 +377,10 @@ import { pinned } from '../../data/site';
 
   @media (max-width: 1000px) {
     .cards {
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
     .sheet {
-      grid-template-columns: 1fr;
+      grid-template-columns: minmax(0, 1fr);
       gap: 1rem;
       overflow-y: auto;
     }
@@ -387,7 +390,32 @@ import { pinned } from '../../data/site';
   }
   @media (max-width: 600px) {
     .cards {
-      grid-template-columns: 1fr;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 1rem;
+    }
+    .works {
+      padding: 0 0.9rem 1.2rem;
+    }
+    .bar {
+      padding-top: 1rem;
+    }
+    /* 手機一欄，圖照 16:9 會佔掉大半個畫面，壓矮一點才看得到下一張 */
+    .thumb {
+      padding-top: 42%;
+    }
+    .glass {
+      padding: 2vh 3vw;
+    }
+    .sheet {
+      max-height: 92vh;
+      padding: 1rem;
+      gap: 0.8rem;
+    }
+    .text h3 {
+      font-size: 1.3rem;
+    }
+    .features {
+      max-height: 26vh;
     }
   }
 </style>
