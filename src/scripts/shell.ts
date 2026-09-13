@@ -33,11 +33,11 @@ export const Shell = {
   onKey(e: KeyboardEvent) {
     if (e.key === 'Escape') {
       if (this.currentWork()) this.closeWork();
-      else if (this.current) this.close();
+      else this.close();
       return;
     }
     // 數字鍵只在主畫面有效,免得在面板裡誤觸換頁
-    if (this.current) return;
+    if (document.querySelector('[data-panel-id]:not([hidden])')) return;
     const n = parseInt(e.key, 10);
     if (n >= 1 && n <= PANEL_IDS.length) this.open(PANEL_IDS[n - 1]);
   },
@@ -55,14 +55,15 @@ export const Shell = {
     this.menu?.classList.remove('back');
     this.menu?.classList.add('away');
     panel.hidden = false;
-    panel.classList.remove('closing');
+    // 強制 reflow,否則同一個面板再開一次時進場動畫不會重播
+    panel.classList.remove('closing', 'opening');
+    void panel.offsetWidth;
     panel.classList.add('opening');
   },
 
   close(silent = false) {
-    const id = this.current;
-    if (!id) return;
-    const panel = this.panelOf(id);
+    // 以畫面上實際開著的面板為準,不信任 current:狀態一旦不同步就再也關不掉
+    const panel = document.querySelector<HTMLElement>('[data-panel-id]:not([hidden])');
     this.current = null;
     this.closeWork();
     if (!panel) return;
@@ -71,12 +72,13 @@ export const Shell = {
       panel.classList.remove('opening', 'closing');
       return;
     }
+    // 用計時器而非 animationend:子元素的動畫也會冒泡上來,收錯事件就關不掉
     panel.classList.remove('opening');
     panel.classList.add('closing');
-    panel.addEventListener('animationend', () => {
+    window.setTimeout(() => {
       panel.hidden = true;
       panel.classList.remove('closing');
-    }, { once: true });
+    }, 120);
     this.menu?.classList.add('back');
     this.menu?.classList.remove('away');
   },
