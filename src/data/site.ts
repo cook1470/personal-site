@@ -17,7 +17,7 @@ export interface Work {
 }
 
 const works: Work[] = [
-  { id: 'kitchen', name: '深夜怪食堂', year: '2026', tag: '怪物餐廳經營', desc: '可不要被吃掉了。', status: '', link: 'https://cook1470.itch.io/midnight-monster-diner', video: 'KG5J-OWNpUw', features: ['山上有一間小店，只在天黑之後開門。', '「嘿，看看是誰來了，我們的新員工，一個人類。」', '網頁直接玩，也有 Windows 與 Mac 版。'], img: '/images/works/kitchen.jpg' },
+  { id: 'kitchen', name: '深夜怪食堂', year: '2026', tag: '怪物餐廳經營', desc: '可不要被吃掉了。', status: '', link: 'https://diner.cook1470.com', link2: 'https://cook1470.itch.io/midnight-monster-diner', link2Label: 'itch.io', video: 'KG5J-OWNpUw', features: ['山上有一間小店，只在天黑之後開門。', '「嘿，看看是誰來了，我們的新員工，一個人類。」', '網頁直接玩，Windows 與 Mac 版在 itch.io。'], img: '/images/works/kitchen.jpg' },
   { id: 'phantasia', name: 'Phantasia Engine', year: '2026', tag: '視覺小說引擎', desc: '在網頁上創作屬於你的視覺小說。', status: '搶先版', link: 'https://phantasia.cook1470.com', link2: 'https://play.cook1470.com', link2Label: '試玩範例', features: ['點選指令就能寫劇本，對話、選項、分支都是按鈕加出來的', '自己的圖跟音樂直接拖進瀏覽器，馬上出現在遊戲裡', '隨時按試玩，立刻從你選的那句開始跑'], img: '/images/works/phantasia.jpg' },
   { id: 'fabula', name: 'Fabula', year: '2026', tag: 'AI TRPG', desc: '世界在你行動的空檔偷偷長大。', status: '', link: 'https://fabula.b43096022.workers.dev/', img: '', hidden: true },
   { id: 'sitdown', name: '坐下，勇者', year: '2026', tag: '卡牌爬塔', desc: '桌子對面的人會插手。', status: '試玩版', link: 'https://sitdown.cook1470.com', features: ['一座塔、三章、四十分鐘的卡牌爬塔。', '桌子對面坐著地下城主。他一邊看你打一邊講話，心情好壞會改變他給你的牌，偶爾直接伸手進來動你的牌局。', '試玩版是第一章，網頁直接玩，也有 Android 版。'], img: '/images/works/sitdown.jpg', hidden: true },
