@@ -7,13 +7,7 @@ import { links } from '../../data/site';
   <div class="inner">
     <img class="avatar" src="/images/cook.jpg" alt="酷可" />
     <h2>酷可 <span class="latin">cook</span></h2>
-    <p class="one">做遊戲，也做讓別人能做遊戲的東西。</p>
-
-    <div class="lines">
-      <p>從 2021 年到現在，九個遊戲同一個世界、兩代視覺小說引擎、三個編輯器。</p>
-      <p>題材換得很開，但底下都是 2D、TypeScript、自己寫的系統。</p>
-      <p>也畫圖。</p>
-    </div>
+    <p class="one">平時的興趣就是做遊戲，常常做一些讓別人也可以做遊戲的東西。</p>
 
     <nav class="contact">
       {links.map((l) => (
@@ -85,21 +79,6 @@ import { links } from '../../data/site';
     color: rgba(255, 255, 255, 0.8);
   }
 
-  .lines {
-    margin-top: 1.8rem;
-    padding-top: 1.6rem;
-    border-top: 1px solid rgba(232, 180, 99, 0.22);
-  }
-  .lines p {
-    margin: 0 0 0.7rem;
-    font-size: 0.9rem;
-    line-height: 1.9;
-    color: rgba(255, 255, 255, 0.7);
-  }
-  .lines p:last-child {
-    margin-bottom: 0;
-  }
-
   .contact {
     display: flex;
     flex-wrap: wrap;
@@ -126,10 +105,6 @@ import { links } from '../../data/site';
     }
     h2 {
       font-size: 1.5rem;
-    }
-    .lines {
-      margin-top: 1.4rem;
-      padding-top: 1.2rem;
     }
   }
 </style>
