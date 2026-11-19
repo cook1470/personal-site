@@ -4,9 +4,10 @@
 
 - 留：深夜怪食堂（他說是目前最完整的作品，而且是獨立作品）、Ryvexia（要換成 Ryvexia II）、CookTWGame、Dunjo、五十音 BINGO
 - 其他全部先不放：Phantasia Engine、PhantomLedger、PixiTank、小女巫・啟程、三台車、CK_TWEventsGame、Fabula、坐下，勇者
-- CookTWGame 改名「酷可的光暈戰記」，名字、介紹、封面照平台上的專案頁；關於頁還有「九個遊戲同一個世界」，他說是瞎掰的，還沒改
+- CookTWGame 改名「酷可的光暈戰記」，名字、介紹、封面照平台上的專案頁
+- 關於頁只留他寫的一句「平時的興趣就是做遊戲，常常做一些讓別人也可以做遊戲的東西。」；首頁標題下那句他說留著
 - 封面原檔在 CG 專案的 resource 裡：Ryvexia2/resource/1467/cover_B.png、CookTWGame/main/resource/14bj/twilight_bistro_level_2.png
-- 繪圖、文、磚、關於還沒挑
+- 繪圖、文、磚還沒挑
 
 ## 需要用戶決定或動手的
 
